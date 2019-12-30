@@ -1,11 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Carpark-App{% endblock %}
 
 {% block body %}
 
-    <h1>Welcome</h1>
+    <h1>Willkommen zur Carpark-App</h1>
 
-    <a href="/signup/show">Registrierung</a>
+    {% if current_user %}
+
+        <p>Hallo {{current_user.first_name}} {{current_user.last_name}}.</p>
+
+        <a href="/logout">Abmeldung.</a>
+        
+    {% else %}
+
+    <a href="/signup/show">Registrierung</a> oder <a href="/login">Anmeldung</a>.
+
+    {% endif %}
 
 {% endblock %}

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 
+
 /**
  * Home controller
  *

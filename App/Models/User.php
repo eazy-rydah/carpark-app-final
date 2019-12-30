@@ -22,11 +22,11 @@ class User extends \Core\Model
     /**
      * Class constructor
      * 
-     * @param array $data Initial property values
+     * @param array $data Initial property values (optional)
      * 
      * @return void
      */  
-    public function __construct($data)
+    public function __construct($data = [])
     {
       
         foreach ($data as $key => $value) {
@@ -35,7 +35,6 @@ class User extends \Core\Model
 
     }
 
-    
     /**
      * Save the user model with the current property values
      * 
@@ -87,8 +86,12 @@ class User extends \Core\Model
         if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
             $this->errors[] = 'E-Mail-Adresse ist ungültig';
         }
-        if ($this->emailExists($this->email)) {
+        if (static::emailExists($this->email)) {
             $this->errors[] = 'E-Mail-Adresse ist bereits vergeben';
+        }
+
+        if ($this->password != $this->password_confirmation) {
+            $this->errors[] = 'Passwörter müssen übereinstimmen';
         }
 
         if (strlen($this->password) < 6) {
@@ -102,9 +105,7 @@ class User extends \Core\Model
         if (preg_match('/.*\d+.*/i', $this->password) == 0) {
             $this->errors[] = 'Passwort muss mindestens eine Zahl enthalten';
         }
-
     }
-
 
     /**
      * See if a user record already exists with the specified email
@@ -114,17 +115,75 @@ class User extends \Core\Model
      * @return boolean True if a record already exists with the specified email,
      * false otherwise  
      */ 
-    protected function emailExists($email)
+    public static function emailExists($email)
+    {
+        return static::findByEmail($email) !== false;
+    }
+
+    /**
+     * Find a user model by email address
+     * 
+     * @param string $email address to search for
+     * 
+     * @return mixed User object if found, false otherwise
+     */  
+    public static function findByEmail($email)
     {
         $sql = 'SELECT * FROM user WHERE email = :email';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+
+        // fetch object with dynamic namespace, instead of array
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
         
         $stmt->execute();
 
-        return $stmt->fetch() !== false; // false if no record is found
+        return $stmt->fetch(); 
+    }
+
+    /**
+     * Authenticate a user by email and password
+     * 
+     * @param string $email email address
+     * @param string $password password
+     * 
+     * @return mixed The user Object or false if authentication fails
+     */  
+    public static function authenticate($email, $password)
+    {
+        $user = static::findByEmail($email);
+
+        if (($user)) {
+            if (password_verify($password, $user->password_hash)) {
+                return $user;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Find a user model by ID
+     * 
+     * @param integer $id The user ID
+     * 
+     * @return mixed User object if found, false otherwise
+     */  
+    public static function findByID($id)
+    {
+        $sql = 'SELECT * FROM user WHERE id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        // fetch object with dynamic namespace, instead of array
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        
+        $stmt->execute();
+
+        return $stmt->fetch(); 
     }
 }

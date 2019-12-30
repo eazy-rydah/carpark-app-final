@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Controllers;
-use \App\Models\User;
 
+use \App\Models\User;
 use \Core\View;
 
 /**
@@ -35,12 +35,23 @@ class Signup extends \Core\Controller
 
         if ($user->save()) {
 
-            View::renderTemplate('Signup/success.html');
-
+            $this->redirect('/signup/success');
+    
         } else {
 
-            var_dump($user->errors);
-
+           View::renderTemplate('Signup/show.html', [
+               'user' => $user
+           ]);
         }
+    }
+
+    /**
+     * Show the signup success page
+     * 
+     * @return void
+     */  
+    public function successAction()
+    {
+        View::renderTemplate('Signup/success.html');
     }
 }
