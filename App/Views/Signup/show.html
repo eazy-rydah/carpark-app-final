@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Registrierung{% endblock %}
+
+{% block body %}
+
+    <h1>Registrierung</h1>
+
+    <form method="post" action="/signup/confirm">
+
+        <h3>Personendaten</h3>
+
+        <div>
+            <label for="inputFirstName">Vorname</label>
+            <input id="inputFirstName" name="firstName" placeholder="Vorname" autofocus>
+        </div>
+
+        <div>
+            <label for="inputFirstName">Nachname</label>
+            <input id="inputLastName" name="lastName" placeholder="Nachname">
+        </div>
+
+        <div>
+            <label for="inputEmail">E-Mail-Adresse</label>
+            <input type="email" id="inputEmail" name="email" placeholder="Vorname" >
+        </div>
+
+        <div>
+            <label for="inputPassword">Passwort</label>
+            <input type="password" id="inputPassword" name="password" autocomplete="new-password" placeholder="Passwort">
+        </div>
+        
+        <div>
+            <input type="submit" value="Eingaben bestätigen">
+        </div>
+        
+        <input type="hidden" name="type" value="client">
+
+    </form>
+
+{% endblock %}
