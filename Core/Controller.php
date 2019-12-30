@@ -97,7 +97,7 @@ abstract class Controller
     {
         if (! AuthMethod::getUser()) {
 
-            FlashMessage::add('Anmeldung erforderlich');
+            FlashMessage::add('Anmeldung erforderlich', FlashMessage::INFO);
 
             AuthMethod::rememberRequestedPage();
 

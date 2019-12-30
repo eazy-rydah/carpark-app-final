@@ -11,13 +11,33 @@ namespace App;
 class FlashMessage
 {
     /**
+     * Succes message type
+     * @var string
+     */  
+    const SUCCESS = 'success';
+
+    /**
+     * Information message type
+     * @var string
+     */  
+    const INFO = 'info';
+
+    /**
+     * Warning message type
+     * @var string
+     */  
+    const WARNING = 'warning';
+
+    /**
      * Add a message
      * 
      * @param string message The message content
      * 
+     * @param string $type The optional message type, defaults to SUCCESS
+     * 
      * @return void
      */ 
-    public static function add($message)
+    public static function add($message, $type = 'success')
     {
         // Create array in the session if it doesnt already exist
         if (! isset($_SESSION['flash_notifications'])) {
@@ -25,7 +45,10 @@ class FlashMessage
         }
 
         // Append the message to the array
-        $_SESSION['flash_notifications'][] = $message;
+        $_SESSION['flash_notifications'][] = [
+            'body' => $message,
+            'type' => $type
+        ];
     }
 
     /**

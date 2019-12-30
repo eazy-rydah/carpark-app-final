@@ -43,7 +43,7 @@ class Login extends \Core\Controller
 
         } else {
 
-            FlashMessage::add('Anmeldung fehlgeschlagen');
+            FlashMessage::add('Anmeldung fehlgeschlagen', FlashMessage::WARNING);
 
             View::renderTemplate('Login/show.html', [
                 'email' => $_POST['email']
