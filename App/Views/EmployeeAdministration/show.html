@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Mitarbeiter Verwaltung{% endblock %}
+
+{% block body %}
+
+    <h1>Mitarbeiter Verwaltung</h1>
+
+    <a href="/employeesignup/show">Neuen Mitarbeiter anlegen</a>
+
+    <hr>
+
+    <h2>Alle Mitarbeiter</h2>
+
+    {% if employees %}
+
+        <table class="table table-striped">
+
+            <thead>
+                <tr>
+                <th scope="col">Vorname</th>
+                <th scope="col">Nachname</th>
+                <th scope="col">E-mail-Adresse</th>
+                <th scope="col">Rolle</th>
+                <th scope="col">Funktionen</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for employee in employees %}
+    
+                  <tr>
+                    <td>{{employee.first_name}}</td>
+                    <td>{{employee.last_name}}</td>
+                    <td>{{employee.email}}</td>
+                    <td>
+                        {% if employee.is_admin is not null %}
+                            Administrator
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="#">Bearbeiten</a>
+                    </td>
+                  </tr>
+             
+                {% endfor %}
+            
+            </tbody>
+
+        </table>
+
+    {% else %}
+
+        <p>Keine Mitarbeiter vorhande</p>
+
+    {% endif %}
+
+{% endblock %}
+
+
+
+

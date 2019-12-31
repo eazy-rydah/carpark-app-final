@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Vertragsanfrage{% endblock %}
+
+{% block body %}
+
+    <h1>Vertragsanfrage</h1>
+    <p>Zur Freigabe-Option ihres Parkplatzes, geben Sie bitte zunächst ihre Vertragsdaten an.</p>
+
+    {% if contractRequest.errors is not empty %}
+        <p>Fehlermeldungen:</p>
+        <ul>
+            {% for error in contractRequest.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post" action="/contractrequest/confirm" id="formContractRequest">
+
+        <div class="form-group">
+            <label for="inputContractId">Vertragsnummer</label>
+            <input type="number" id="inputContractId" name="contract_request_id"  placeholder="Vertragsnummer" value="{{ contractRequest.contract_request_id }}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="InputRfidId">RFID-Schlüssel-Nummer</label>
+            <input type="number" id="InputRfidId" name="rfid_request_id" placeholder="RFID-Schlüssel-Nummer" value="{{ contractRequest.rfid_request_id}}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Eingaben bestätigen" class=" btn btn-success">
+        </div>
+        <a href="/">Zurück</a>
+
+    </form>
+
+    <hr>
+
+    <h2>Gestellt</h2>
+
+    {% if contractRequests %}
+
+        <table class="table table-striped">
+
+            <thead>
+                <tr>
+                <th scope="col">Vertragsnummer</th>
+                <th scope="col">RFID-Schlüssel</th>
+                <th scope="col">Gestellt am</th>
+                <th scope="col">Status</th>
+                <th scope="col">Funktionen</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for request in contractRequests %}
+    
+                  <tr>
+                    <td>{{request.contract_request_id}}</td>
+                    <td>{{request.rfid_request_id}}</td>
+                    <td>{{request.created_at | date("d.m.Y")}}</td>
+                    <td>
+                        {% if request.contract_id is not null %}
+                            Bestätigt
+                        {% else %}
+                            Ausstehend
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if request.contract_id is not null %}
+                            <a href="#">Zum Vertrag</a>
+                        {% else %}
+                            <a href="/contractrequest/delete/{{request.id}}">Zurückziehen</a>
+                        {% endif %}
+                    </td>
+                  </tr>
+             
+                {% endfor %}
+            
+            </tbody>
+
+        </table>
+
+    {% else %}
+
+        <p>Keine Ausstehenden Anfragen</p>
+
+    {% endif %}
+
+{% endblock %}

@@ -35,12 +35,9 @@ class Signup extends \Core\Controller
 
         if ($user->save()) {
 
-            if ($user->type == 'client') {
+       
+            $user->sendActivationEmail();
 
-                $user->sendActivationEmail();
-
-            }
-          
             $this->redirect('/signup/show-success');
     
         } else {

@@ -81,5 +81,4 @@ class AuthMethod {
             return User::findByID($_SESSION['user_id']);
         }
     }
-
 }

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Mitarbeiter Registrierung{% endblock %}
+
+{% block body %}
+
+    <h1>Mitarbeiter Registrierung</h1>
+
+    {% if employee.errors is not empty %}
+        <p>Fehlermeldungen:</p>
+        <ul>
+            {% for error in employee.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post" action="/employeesignup/confirm" id="formEmployeeSignup">
+
+        <div class="form-group">
+            <label for="inputFirstName">Vorname</label>
+            <input id="inputFirstName" name="first_name" placeholder="Vorname" autofocus value="{{ employee.first_name }}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="inputFirstName">Nachname</label>
+            <input id="inputLastName" name="last_name" placeholder="Nachname" value="{{ employee.last_name }}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="inputEmail">E-Mail-Adresse</label>
+            <input type="email" id="inputEmail" name="email" autocomplete="new-email" placeholder="E-mail-Adresse" value="{{ employee.email }}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="inputPassword">Passwort</label>
+            <input type="password" id="inputPassword" name="password" autocomplete="new-password" placeholder="Passwort" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="inputPasswordConfirmation">Passwort wiederholen</label>
+            <input type="password" id="inputPasswordConfirmation" name="password_confirmation" autocomplete="new-password" placeholder="Passwort wiederholen" class="form-control">
+        </div>
+
+        <hr>
+
+        <h3>Abteilung</h3>
+
+        {% for employeeRole in employeeRoles %}
+        
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="employeeRole[]" value="{{employeeRole.id}}" id="{{employeeRole.id}}">
+            <label class="form-check-label" for="{{employeeRole.id}}">
+              {{employeeRole.name}}
+            </label>
+        </div>
+
+        {% endfor %}
+
+        <div class="form-group mt-3">
+            <input type="submit" value="Eingaben bestätigen" class=" btn btn-success">
+        </div>
+        
+        <input type="hidden" name="type" value="employee">
+
+    </form>
+
+{% endblock %}
+
+
+
+
