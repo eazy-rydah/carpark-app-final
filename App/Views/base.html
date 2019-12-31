@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}{% endblock %}</title>
     <!-- BOOTSTRAP CSS CDN -->
@@ -11,6 +11,46 @@
 </head>
 <body>
     <div class="container my-3">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light px-0">
+
+            <a class="navbar-brand h1" href="/">SWG CarparkApp</a>
+    
+            {% if current_user %} 
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    
+                <ul class="navbar-nav ml-auto">
+
+                    {% if current_user.is_admin == 1 %}
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">Parkplätze</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">Freigaben</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">Nutzer</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                    <a class="nav-link" href="/profile/show">Profil</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="/logout">Abmelden</a>
+                    </li>
+    
+              </ul>
+        
+            </div>
+
+            {% endif %}
+    
+          </nav>
 
         {% for message in flash_messages %}
             <div class="alert alert-{{ message.type }}">

@@ -40,7 +40,7 @@ class Mail
             $mail->Port       = 587;                                   
         
             //Recipients
-            $mail->setFrom("info@carparkapp.com", "Carpark Info");
+            $mail->setFrom("info@carparkapp.com", "Carpark-App Info");
             $mail->addAddress($to);     
         
             // Content
