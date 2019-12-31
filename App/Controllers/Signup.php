@@ -35,7 +35,13 @@ class Signup extends \Core\Controller
 
         if ($user->save()) {
 
-            $this->redirect('/signup/success');
+            if ($user->type == 'client') {
+
+                $user->sendActivationEmail();
+
+            }
+          
+            $this->redirect('/signup/show-success');
     
         } else {
 
@@ -50,8 +56,31 @@ class Signup extends \Core\Controller
      * 
      * @return void
      */  
-    public function successAction()
+    public function showSuccessAction()
     {
         View::renderTemplate('Signup/success.html');
+    }
+
+    /**
+     * Activate a new account
+     * 
+     * @return void
+     */  
+    public function activateAction()
+    {
+        User::activate($this->route_params['token']);
+
+        $this->redirect('/signup/show-activated');
+        
+    }
+
+    /**
+     * Show the activation success page
+     * 
+     * @return void
+     */  
+    public function showActivatedAction()
+    {
+        View::renderTemplate('Signup/activated.html');
     }
 }

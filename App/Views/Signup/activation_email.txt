@@ -1,0 +1,5 @@
+Nutzerkonto aktivieren
+
+Auf den folgenden Link klicken, um das Nutzerkonto zu aktivieren:
+
+{{ url }}

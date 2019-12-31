@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Passwort zurücksetzen{% endblock %}
+
+{% block body %}
+
+    <h1>Passwort zurücksetzen</h1>
+
+    {% if user.errors is not empty %}
+        <p>Fehlermeldungen:</p>
+        <ul>
+            {% for error in user.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post" action="/password/confirm-reset" id="formPassword">
+
+        <input type="hidden" name="token" value="{{ token }}">
+
+        <div class="form-group">
+            <label for="inputPassword">Neues Passwort</label>
+            <input type="password" id="inputPassword" name="password" autocomplete="new-password" placeholder="Neues Passwort" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="inputPasswordConfirmation">Passwort wiederholen</label>
+            <input type="password" id="inputPasswordConfirmation" name="password_confirmation" autocomplete="new-password" placeholder="Passwort wiederholen" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Eingaben bestätigen" class=" btn btn-success">
+        </div>
+        
+        <input type="hidden" name="type" value="client">
+
+    </form>
+
+{% endblock %}
+
+
+
+

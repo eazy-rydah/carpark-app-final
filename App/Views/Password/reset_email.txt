@@ -1,0 +1,5 @@
+Passwort zurücksetzen
+
+Auf den folgenden Link klicken, um Passwort zurückzusetzen:
+
+{{ url }}
