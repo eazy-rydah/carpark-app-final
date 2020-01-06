@@ -54,13 +54,13 @@ class ContractRequestData extends \Core\Model
             $nowISO8601 = $now->format(DateTime::ISO8601);
 
             $sql = 'INSERT INTO contract_request (
-                                contract_request_id,  
-                                rfid_request_id,
+                                contract_id,  
+                                rfid_id,
                                 client_id,
                                 created_at)
                     VALUES (
-                        :contract_request_id,
-                        :rfid_request_id,
+                        :contract_id,
+                        :rfid_id,
                         :client_id,
                         :created_at
                     )';
@@ -69,8 +69,8 @@ class ContractRequestData extends \Core\Model
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue(':contract_request_id', $this->contract_request_id, PDO::PARAM_STR);
-            $stmt->bindValue(':rfid_request_id', $this->rfid_request_id, PDO::PARAM_STR);
+            $stmt->bindValue(':contract_id', $this->contract_id, PDO::PARAM_STR);
+            $stmt->bindValue(':rfid_id', $this->rfid_id, PDO::PARAM_STR);
             $stmt->bindValue(':client_id', $this->user_id, PDO::PARAM_INT);
             $stmt->bindValue(':created_at', $nowISO8601, PDO::PARAM_STR);
 
@@ -90,19 +90,19 @@ class ContractRequestData extends \Core\Model
     public function validate()
     {
 
-        if ($this->contract_request_id == '') {
+        if ($this->contract_id == '') {
             $this->errors[] = 'Vertragsnummer angeben';
         }
 
-        if (strlen($this->contract_request_id) < 6) {
+        if (strlen($this->contract_id) < 6) {
                 $this->errors[] = 'Vertragsnummer muss mindestens 6 Zeichen lang sein';
         }
 
-        if ($this->rfid_request_id == '') {
+        if ($this->rfid_id == '') {
             $this->errors[] = 'RFID-Schlüssel-Nummer angeben';
         }
 
-        if (strlen($this->rfid_request_id) < 6) {
+        if (strlen($this->rfid_id) < 6) {
             $this->errors[] = 'RFID-Schlüsselnummer muss mindestens 6 Zeichen lang sein';
         }
     }
@@ -189,6 +189,50 @@ class ContractRequestData extends \Core\Model
         $stmt->execute();
 
         return $stmt->fetchAll(); 
+    }
+
+      /**
+     * Find contract requets by contract ID
+     * 
+     * @param integer $id The contract ID
+     * 
+     * @return mixed User object if found, false otherwise
+     */  
+    public static function findByContractID($id)
+    {
+        $sql = 'SELECT * FROM contract_request WHERE contract_id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        // fetch object with dynamic namespace, instead of array
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        
+        $stmt->execute();
+
+        return $stmt->fetch(); 
+    }
+
+    
+    /**
+    * Confirm contract request by Contract ID
+    * 
+    * @return void
+    *
+    */
+    public static function confirmByContractId($id) {
+
+        $sql = 'UPDATE contract_request
+                SET is_confirmed = 1
+                WHERE contract_id = :contract_id';
+        
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':contract_id', $id, PDO::PARAM_STR);
+
+        $stmt->execute();
     }
 }
 

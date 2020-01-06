@@ -20,12 +20,12 @@
 
         <div class="form-group">
             <label for="inputContractId">Vertragsnummer</label>
-            <input type="number" id="inputContractId" name="contract_request_id"  placeholder="Vertragsnummer" value="{{ contractRequest.contract_request_id }}" class="form-control">
+            <input type="number" id="inputContractId" name="contract_id"  placeholder="Vertragsnummer" value="{{ contractRequest.contract_request_id }}" class="form-control">
         </div>
 
         <div class="form-group">
             <label for="InputRfidId">RFID-Schlüssel-Nummer</label>
-            <input type="number" id="InputRfidId" name="rfid_request_id" placeholder="RFID-Schlüssel-Nummer" value="{{ contractRequest.rfid_request_id}}" class="form-control">
+            <input type="number" id="InputRfidId" name="rfid_id" placeholder="RFID-Schlüssel-Nummer" value="{{ contractRequest.rfid_request_id}}" class="form-control">
         </div>
 
         <div class="form-group">
@@ -58,18 +58,18 @@
                 {% for request in contractRequests %}
     
                   <tr>
-                    <td>{{request.contract_request_id}}</td>
-                    <td>{{request.rfid_request_id}}</td>
+                    <td>{{request.contract_id}}</td>
+                    <td>{{request.rfid_id}}</td>
                     <td>{{request.created_at | date("d.m.Y")}}</td>
                     <td>
-                        {% if request.contract_id is not null %}
+                        {% if request.contract_id == 1 %}
                             Bestätigt
                         {% else %}
                             Ausstehend
                         {% endif %}
                     </td>
                     <td>
-                        {% if request.contract_id is not null %}
+                        {% if request.contract_id == 1 %}
                             <a href="#">Zum Vertrag</a>
                         {% else %}
                             <a href="/contractrequest/delete/{{request.id}}">Zurückziehen</a>
