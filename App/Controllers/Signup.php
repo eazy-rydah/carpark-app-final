@@ -31,11 +31,11 @@ class Signup extends \Core\Controller
      */  
     public function confirmAction()
     {
+
         $user = new User($_POST);
 
         if ($user->save()) {
 
-       
             $user->sendActivationEmail();
 
             $this->redirect('/signup/show-success');

@@ -5,6 +5,7 @@ namespace App;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+use App\Config;
 
 /**
  * Mail
@@ -32,10 +33,10 @@ class Mail
             //Server settings
             // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                     
             $mail->isSMTP();                                           
-            $mail->Host       = 's157.goserver.host';                  
+            $mail->Host       = Config::MAIL_HOST;                  
             $mail->SMTPAuth   = true;                                  
-            $mail->Username   = 'web53p1';                    
-            $mail->Password   = 'ahd9Aegh';                              
+            $mail->Username   = Config::MAIL_USER;                    
+            $mail->Password   = Config::MAIL_PASSWORD;                              
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         
             $mail->Port       = 587;                                   
         

@@ -12,7 +12,7 @@ use \App\Models\ContractRequestData;
  * 
  * PHP version 7.0
  */ 
-class ContractRequest extends Client
+class ContractRequest extends ClientAuth
 {
     /**
      * Load all existing contractRequests related to current user
@@ -37,6 +37,17 @@ class ContractRequest extends Client
         View::renderTemplate('ContractRequest/show.html', [
             'contractRequests' => $this->requests
         ]);
+
+    }
+
+     /**
+     * Show the contract request page
+     * 
+     * @return void
+     */
+    public function showAllAction()
+    {
+        View::renderTemplate('ContractRequest/show-all.html');
 
     }
 

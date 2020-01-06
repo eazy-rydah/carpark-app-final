@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Vertragsanfrage{% endblock %}
+
+{% block body %}
+
+    <h1>Vertragsanfragen</h1>
+
+    {% if requests %}
+
+        <table class="table table-striped">
+
+            <thead>
+                <tr>
+                <th scope="col">Vertragsnummer</th>
+                <th scope="col">RFID-Schlüssel</th>
+                <th scope="col">Gestellt am</th>
+                <th scope="col">Status</th>
+                <th scope="col">Funktionen</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for request in requests %}
+    
+                  <tr>
+                    <td>{{request.contract_request_id}}</td>
+                    <td>{{request.rfid_request_id}}</td>
+                    <td>{{request.created_at | date("d.m.Y")}}</td>
+                    <td>
+                        {% if request.contract_id is not null %}
+                            Bestätigt
+                        {% else %}
+                            Ausstehend
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if request.contract_id is not null %}
+                            <a href="#">Zum Vertrag</a>
+                        {% else %}
+                            <a href="#">Vertrag anlegen</a> | 
+                            <a href="#">Ablehnen</a>
+                        {% endif %}
+                    </td>
+                  </tr>
+             
+                {% endfor %}
+            
+            </tbody>
+
+        </table>
+
+    {% else %}
+
+        <p>Keine Ausstehenden Anfragen</p>
+
+    {% endif %}
+
+{% endblock %}

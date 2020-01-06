@@ -6,7 +6,7 @@
 
     <h1>Mitarbeiter Verwaltung</h1>
 
-    <a href="/employeesignup/show">Neuen Mitarbeiter anlegen</a>
+    <a href="/employee/show-signup">Neuen Mitarbeiter anlegen</a>
 
     <hr>
 
@@ -21,7 +21,6 @@
                 <th scope="col">Vorname</th>
                 <th scope="col">Nachname</th>
                 <th scope="col">E-mail-Adresse</th>
-                <th scope="col">Rolle</th>
                 <th scope="col">Funktionen</th>
                 </tr>
             </thead>
@@ -42,7 +41,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="#">Bearbeiten</a>
+                        <a href="/employee/delete/{{ employee.id }}">Löschen</a>
                     </td>
                   </tr>
              

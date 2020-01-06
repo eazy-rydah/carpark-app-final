@@ -6,11 +6,11 @@ use \App\AuthMethod;
 use \App\FlashMessage;
 
 /**
- * Administrator base controller
+ * Client base controller
  * 
  * PHP version 7.0
  */ 
-abstract class Administrator extends Authenticated
+abstract class ClientAuth extends Authenticated
 {
     /**
      * Require the user to be authenticated before giving access to all methods * in the controller
@@ -23,23 +23,23 @@ abstract class Administrator extends Authenticated
 
         $this->user = AuthMethod::getUser();
 
-        $this->requireAdmin();
+        $this->requireClient();
 
     }
 
      /**
-     * Require the user to be administrator before giving access to the 
+     * Require the user to of type client in before giving access to the 
      * requested page.
      * 
      * Remember the requested page for later, then redirect to the login page.
      * 
      * @return void
      */ 
-    protected function requireAdmin()
+    protected function requireClient()
     {
-        if (! $this->user->is_admin) {
+        if ($this->user->type != 'client') {
 
-            FlashMessage::add('Administratorrechte erforderlich', FlashMessage::INFO);
+            FlashMessage::add('Kundenrolle erforderlich', FlashMessage::INFO);
 
             $this->redirect('/');
         }

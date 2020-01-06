@@ -170,5 +170,25 @@ class ContractRequestData extends \Core\Model
 
         return $stmt->execute(); 
     }
+
+    /**
+     * Getcontract request 
+     * 
+     * @return mixed User object if found, false otherwise
+     */  
+    public static function getAll()
+    {
+        $sql = 'SELECT * FROM contract_request';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        // fetch object with dynamic namespace, instead of array
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        
+        $stmt->execute();
+
+        return $stmt->fetchAll(); 
+    }
 }
 

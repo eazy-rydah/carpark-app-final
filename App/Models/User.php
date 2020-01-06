@@ -468,4 +468,23 @@ class User extends \Core\Model
         return $stmt->fetchAll(); 
     }
 
+    /**
+     * Delete a user model by ID
+     * 
+     * @param string $id The user ID
+     * 
+     * @return void 
+    */ 
+    public function delete()
+    {
+        $sql = 'DELETE FROM user WHERE id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+    }  
 }
