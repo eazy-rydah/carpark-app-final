@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Vertragsanfrage{% endblock %}
+
+{% block body %}
+
+    <h1>Vertragsanfrage</h1>
+
+    <form method="POST" id="formContract" action="/contract/new">
+
+        <div class="form-group">
+            <label for="inputFirstName">Vorname</label>
+            <input id="inputFirstName" name="first_name" placeholder="Vorname"  value="{{ client.first_name}}" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="inputFirstName">Nachname</label>
+            <input id="inputLastName" name="last_name" placeholder="Nachname" value="{{ client.last_name }}" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="inputEmail">E-Mail-Adresse</label>
+            <input type="email" id="inputEmail" name="email" placeholder="E-mail-Adresse" value="{{ client.email }}" class="form-control" readonly>
+        </div>
+
+        <input type="hidden" name="client_id" value="{{client.id}}">
+
+        <div class="form-group">
+            <label for="inputContractId">Vertragsnummer</label>
+            <input type="number" id="inputContractId" name="contract_id" placeholder="Vertragsnummer" value="{{request.contract_id}}" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="inputRfidId">RFID-Schlüsselnummer</label>
+            <input type="number" id="inputRfidId" name="rfid_id" placeholder="RFID-Schlüsselnummer" value="{{request.rfid_id}}" class="form-control" readonly>
+        </div>
+
+        <input type="hidden" name="request_id" value="{{request.id}}">
+
+        <div class="form-group">
+            <input type="submit" value="Vertrag anlegen" class=" btn btn-success">
+        </div>
+
+        <div class="form-group">
+            <a href="/contractrequest/deny/{{request.id}}" class="btn btn-warning">Ablehnen</a>
+        </div>
+
+        <a href="/contractrequest/show-all" class="btn btn-secondary btn-sm">Zurück</a>
+
+    </form>
+
+{% endblock %}

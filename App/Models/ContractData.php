@@ -9,7 +9,7 @@ use PDO;
  *
  * PHP version 7.0
  */
-class ContractData extends \Core\Model
+class ContractData extends ContractRequestData
 {
 
     /**
@@ -24,8 +24,6 @@ class ContractData extends \Core\Model
      * 
      * @param array $data Initial property values (optional)
      * 
-     * @param integer $user_id The ID of the client user 
-     * 
      * @return void
      */  
     public function __construct($data = [])
@@ -38,7 +36,7 @@ class ContractData extends \Core\Model
     }
 
     /**
-     * Save the user model with the current property values
+     * Save the Contract Request with the current property values
      * 
      * @return boolean True if the user was saved, false otherwise
      */ 
@@ -48,28 +46,45 @@ class ContractData extends \Core\Model
 
         if (empty($this->errors)) {
 
-            $sql = 'INSERT INTO contract 
-                    (id, /* parking_id, */ client_id, rfid_id, credit_item_per_day)
-                    VALUES 
-                    (:id, /* :parking_id, */ :client_id, :rfid_id, :credit_item_per_day)';
+           // var_dump($this); exit;
 
+            $sql = 'INSERT INTO contract (
+                                id,  
+                                carpark_id,
+                                client_id,
+                                rfid_id,
+                                credit_item_per_day)
+                    VALUES (
+                        :id,
+                        :carpark_id,
+                        :client_id,
+                        :rfid_id,
+                        :credit_item_per_day
+                    )';
+
+            
             $db = static::getDB();
             $stmt = $db->prepare($sql);
-    
+
             $stmt->bindValue(':id', $this->contract_id, PDO::PARAM_INT);
-           //$stmt->bindValue(':parking_id', 22, PDO::PARAM_INT);
+            $stmt->bindValue(':carpark_id', $this->carpark_id, PDO::PARAM_INT);
             $stmt->bindValue(':client_id', $this->client_id, PDO::PARAM_INT);
             $stmt->bindValue(':rfid_id', $this->rfid_id, PDO::PARAM_INT);
-            $stmt->bindValue(':credit_item_per_day', strval($this->credit_item_per_day) ,PDO::PARAM_STR);
-    
+            $stmt->bindValue(
+                            ':credit_item_per_day',
+                            strval($this->credit_item_per_day),
+                            PDO::PARAM_STR);
+
             return $stmt->execute(); 
+
+            return true;
 
         }
 
         return false; 
     }
 
-    /**
+     /**
      * Validate the current property values, adding validation error messages
      * to the errors array property
      *  
@@ -77,27 +92,60 @@ class ContractData extends \Core\Model
      */  
     public function validate()
     {
+       
+        parent::validate();
 
-        if ($this->contract_id == '') {
-            $this->errors[] = 'Bitte Vertragsnummer angeben';
-        }
-
-        if (strlen($this->contract_id) < 6) {
-            $this->errors[] = 'Vertragsnummer muss mindestens 6 Zeichen lang sein';
-    }
-
-        if ($this->rfid_id == '') {
-            $this->errors[] = 'Bitte RFID-Schlüsselnummer angeben';
-        }
-
-        if (strlen($this->rfid_id) < 6) {
-            $this->errors[] = 'RFID-Schlüsselnummer muss mindestens 6 Zeichen lang sein';
+        if (!isset($this->carpark_id)) {
+            $this->errors[] = 'Bitte Parkhaus auswählen';
         }
 
         if ($this->credit_item_per_day == '') {
-            $this->errors[] = 'Bitte Gutschrift pro Tag angeben angeben';
+            $this->errors[] = 'Bitte Gutschrift pro Tag angeben';
         }
-
     }
+
+    /**
+     * Get all contracts
+     * 
+     * @return mixed Contract object if found, false otherwise
+     */  
+    public static function getAll()
+    {
+        $sql = 'SELECT * FROM contract';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        // fetch object with dynamic namespace, instead of array
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        
+        $stmt->execute();
+
+        return $stmt->fetchAll(); 
+    }
+
+      /**
+     * Find contract  by ID
+     * 
+     * @param integer $id The ID
+     * 
+     * @return mixed Contract object if found, false otherwise
+     */  
+    public static function findByID($id)
+    {
+        $sql = 'SELECT * FROM contract WHERE id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        // fetch object with dynamic namespace, instead of array
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        
+        $stmt->execute();
+
+        return $stmt->fetch(); 
+    }
+
 }
 

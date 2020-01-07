@@ -5,6 +5,9 @@ namespace App\Controllers;
 use \Core\View;
 use \App\AuthMethod;
 use \App\FlashMessage;
+use \App\Config;
+use \App\Models\User;
+use \App\Models\Client;
 use \App\Models\ContractRequestData;
 
 /**
@@ -12,20 +15,9 @@ use \App\Models\ContractRequestData;
  * 
  * PHP version 7.0
  */ 
-class ContractRequest extends ClientAuth
+class ContractRequest extends Authenticated
 {
-    /**
-     * Load all existing contractRequests related to current user
-     * 
-     * @return void
-     */ 
-    protected function before()
-    {
-        parent::before();
-
-        $this->requests = ContractRequestData::findAllByID($this->user->id);
-    }
-
+ 
     /**
      * Show the contract request page
      * 
@@ -33,8 +25,11 @@ class ContractRequest extends ClientAuth
      */
     public function showAction()
     {
+        $user = AuthMethod::getUser();
 
-        View::renderTemplate('ContractRequest/show.html', [
+        $this->requests = ContractRequestData::findAllByUserID($user->id);
+
+        View::renderTemplate('ContractRequest/new.html', [
             'contractRequests' => $this->requests
         ]);
 
@@ -47,8 +42,20 @@ class ContractRequest extends ClientAuth
      */
     public function showAllAction()
     {
-        View::renderTemplate('ContractRequest/show-all.html');
+        $user = AuthMethod::getUser();
 
+        if ($user->role_id != Config::ROLE_CUSTOMER_SERVICE) {
+
+            FlashMessage::add('Mitarbeiterberechtigung erforderlich', FlashMessage::INFO);
+            $this->redirect('/');
+
+        } else {
+
+            $requests = ContractRequestData::getAll();
+            View::renderTemplate('ContractRequest/all.html', [
+                'requests' => $requests
+            ]);
+        }
     }
 
     /**
@@ -58,7 +65,11 @@ class ContractRequest extends ClientAuth
      */
     public function confirmAction()
     {
-        $request = new ContractRequestData($_POST, $this->user->id);
+        $user = AuthMethod::getUser();
+
+        $request = new ContractRequestData($_POST, $user->id);
+
+        $requests = ContractRequestData::findAllByUserID($user->id);
 
         if ($request->save()) {
           
@@ -66,9 +77,9 @@ class ContractRequest extends ClientAuth
     
         } else {
 
-           View::renderTemplate('ContractRequest/show.html', [
+           View::renderTemplate('ContractRequest/new.html', [
                'contractRequest' => $request,
-               'contractRequests' => $this->requests
+               'contractRequests' => $requests
            ]);
         }
     }
@@ -90,12 +101,13 @@ class ContractRequest extends ClientAuth
      */  
     public function deleteAction()
     {
-       
+        $user = AuthMethod::getUser();
+
         $request = ContractRequestData::findByID($this->route_params['id']);
 
         if ($request) {
 
-            if ($this->user->id == $request->client_id) {
+            if ($user->id == $request->client_id) {
 
                 FlashMessage::add('Vertragsanfrage zurückgezogen', FlashMessage::INFO);
 
@@ -113,6 +125,70 @@ class ContractRequest extends ClientAuth
 
             $this->redirect('/');
 
+        }
+    }
+
+    /**
+     * Show the contract details page
+     * 
+     * @return void
+     */
+    public function showDetailsAction()
+    {
+        $user = AuthMethod::getUser();
+
+        if ($user->role_id != Config::ROLE_CUSTOMER_SERVICE) {
+
+            FlashMessage::add('Mitarbeiterberechtigung erforderlich', FlashMessage::INFO);
+
+            $this->redirect('/');
+
+        } else {
+
+            $id = $this->route_params['id'];
+
+            $request= ContractRequestData::findByID($id);
+
+            $relatedClient = User::findByID($request->client_id);
+    
+            View::renderTemplate('ContractRequest/details.html', [
+               'client' => $relatedClient, 
+               'request' => $request
+            ]);
+        }
+    }
+
+    /**
+     * Deny a contract Request
+     * 
+     * @return void
+     */
+    public function denyAction()
+    {
+        $user = AuthMethod::getUser();
+
+        if ($user->role_id != Config::ROLE_CUSTOMER_SERVICE) {
+
+            FlashMessage::add('Mitarbeiterberechtigung erforderlich', FlashMessage::INFO);
+
+            $this->redirect('/');
+
+        } else {
+
+            $id = $this->route_params['id'];
+
+            $request = ContractRequestData::findByID($id);
+            $relatedClient = Client::findByID($request->client_id);
+          
+            $relatedClient->sendRequestDenyEmail($request);
+
+            $request->delete();
+
+            // relatedclient->sendDenyEmail
+
+            FlashMessage::add('Vertragsanfrage abgelehnt', FlashMessage::INFO);
+
+            $this->redirect('/contractrequest/show-all');
         }
     }
 }

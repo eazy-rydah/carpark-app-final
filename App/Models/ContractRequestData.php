@@ -114,7 +114,7 @@ class ContractRequestData extends \Core\Model
      * 
      * @return mixed User object if found, false otherwise
      */  
-    public static function findAllByID($user_id)
+    public static function findAllByUserID($user_id)
     {
         $sql = 'SELECT * FROM contract_request WHERE client_id = :user_id';
 

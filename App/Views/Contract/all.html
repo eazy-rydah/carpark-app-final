@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Vertrag{% endblock %}
+
+{% block body %}
+
+    <h1>Vertrag</h1>
+
+    {% if contracts %}
+
+        <table class="table table-striped">
+
+            <thead>
+                <tr>
+                <th scope="col">Vertragsnummer</th>
+                <th scope="col">RFID-Schlüssel</th>
+                <th scope="col">Erstellt am</th>
+                <th scope="col">Status</th>
+                <th scope="col">Funktionen</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for contract in contracts %}
+    
+                  <tr>
+                    <td>{{contract.id}}</td>
+                    <td>{{contract.rfid_id}}</td>
+                    <td>{{request.created_at | date("d.m.Y")}}</td>
+                    <td>{% if contract.is_blocked == 1 %}
+                        Blockiert
+                    {% else %}
+                        Aktiv
+                    {% endif %}</td>
+                    <td>
+                     
+                    <a href="/contract/edit/{{contract.id}}">Details einsehen</a> 
+                    
+                    </td>
+                  </tr>
+             
+                {% endfor %}
+            
+            </tbody>
+
+        </table>
+
+    {% else %}
+
+        <p>Keine bestehenden Verträge</p>
+
+    {% endif %}
+
+{% endblock %}

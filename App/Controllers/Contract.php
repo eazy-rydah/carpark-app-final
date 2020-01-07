@@ -5,7 +5,6 @@ namespace App\Controllers;
 use \Core\View;
 use \App\AuthMethod;
 use \App\FlashMessage;
-use \App\Models\ContractRequestData;
 use \App\Models\CarparkData;
 use \App\Models\ContractData;
 use \App\Models\User;
@@ -17,17 +16,70 @@ use \App\Models\User;
  */ 
 class Contract extends EmployeeAuth
 {
+ 
+    /**
+     * Show new contract page
+     * 
+     * @return void
+     */
+    public function newAction()
+    {
+        $contract = new ContractData($_POST);
+
+        // get client by id
+        $client = User::findByID($contract->client_id);
+
+        $carparks = CarparkData::getAll();
+
+        View::renderTemplate('Contract/new.html', [
+            'client' => $client, 
+            'contract' => $contract,
+            'carparks' => $carparks
+        ]);
+    }
+
+    /**
+     * create new contract
+     * 
+     * @return void
+     */
+    public function createAction()
+    {
+        
+        $contract = new ContractData($_POST);
+
+        $client = User::findByID($contract->client_id);
+        
+        if ($contract->save()) {
+
+            FlashMessage::add('Vertrag erfolgreich angelegt', FlashMessage::SUCCESS);
+
+            $this->redirect('/contract/show-all');
+    
+        } else {
+
+            $carparks = CarparkData::getAll();
+
+            View::renderTemplate('Contract/new.html', [
+            'client' => $client, 
+            'contract' => $contract,
+            'carparks' => $carparks
+            ]);
+        } 
+       
+    }
+
     /**
      * Show the contract request page
      * 
      * @return void
      */
-    public function showRequestsAction()
+    public function showAllAction()
     {
-        $requests = ContractRequestData::getAll();
+       $contracts = ContractData::getAll();
 
-        View::renderTemplate('ContractRequest/show-all.html', [
-            'requests' => $requests
+       View::renderTemplate('Contract/all.html', [
+        'contracts' => $contracts
         ]);
 
     }
@@ -37,57 +89,20 @@ class Contract extends EmployeeAuth
      * 
      * @return void
      */
-    public function showDetailsAction()
+    public function editAction()
     {
         $id = $this->route_params['id'];
-        $contract = ContractRequestData::findByID($id);
-        $client = User::findByID($contract->client_id);
+
+        $contract= ContractData::findByID($id);
+
+        $relatedClient = User::findByID($contract->client_id);
+
         $carparks = CarparkData::getAll();
 
-        View::renderTemplate('Contract/create.html', [
-            'client' => $client,
+       View::renderTemplate('Contract/edit.html', [
+            'client' => $relatedClient, 
             'contract' => $contract,
             'carparks' => $carparks
         ]);
     }
-
-    /**
-     * create the contract 
-     * 
-     * @return void
-     */
-    public function createAction()
-    {
-        $contract = new ContractData($_POST);
-        $client = User::findByID($contract->client_id);
-        $carparks = CarparkData::getAll();
-
-        if ($contract->save()) {
-
-            $relatedRequest = ContractRequestData::confirmByContractId($contract->contract_id);
-
-         /* $client->sendContractActivationEmail();
-        */
-            FlashMessage::add('Vertrag erfolgreich angelegt');
-
-            $this->redirect('/contract/show-requests');
-
-        } else {
-
-            View::renderTemplate('Contract/create.html', [
-                'client' => $client,
-                'contract' => $contract,
-                'carparks' => $carparks
-            ]);
-        }
-    }
-
-    public function denyRequest()
-    {
-        // TOOODOOO
-
-        // EMAIL ETC
-    }
-
-   
 }

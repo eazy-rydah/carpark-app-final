@@ -41,7 +41,7 @@ class Mail
             $mail->Port       = 587;                                   
         
             //Recipients
-            $mail->setFrom("info@carparkapp.com", "Carpark-App Info");
+            $mail->setFrom(Config::MAIL_SENDER, Config::MAIL_SENDER_NAME);
             $mail->addAddress($to);     
         
             // Content

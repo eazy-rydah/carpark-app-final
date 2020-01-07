@@ -31,8 +31,7 @@
                         {% if request.is_confirmed == 1 %}
                             Besätigt
                         {% else %}
-                            <a href="/contract/show-details/{{request.id}}">Details</a> | 
-                            <a href="#">Ablehnen</a>
+                            <a href="/contractrequest/show-details/{{request.id}}">Details einsehen</a> 
                         {% endif %}
                     </td>
                   </tr>

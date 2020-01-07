@@ -21,7 +21,8 @@
                 <th scope="col">Vorname</th>
                 <th scope="col">Nachname</th>
                 <th scope="col">E-mail-Adresse</th>
-                <th scope="col">Funktionen</th>
+                <th scope="col">Rolle</th>
+                <th scope="col">Funktion</th>
                 </tr>
             </thead>
 
@@ -34,11 +35,11 @@
                     <td>{{employee.last_name}}</td>
                     <td>{{employee.email}}</td>
                     <td>
-                        {% if employee.is_admin is not null %}
-                            Administrator
-                        {% else %}
-                            -
-                        {% endif %}
+                        {% for role in roles %}
+                            {% if employee.role_id == role.id %}
+                                {{role.name}}
+                            {% endif %}
+                        {% endfor %}
                     </td>
                     <td>
                         <a href="/employee/delete/{{ employee.id }}">Löschen</a>

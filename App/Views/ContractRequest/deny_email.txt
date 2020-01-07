@@ -1,0 +1,3 @@
+Vertragsanfrage abgelehnt
+
+Die Vertragsanfrage vom {{request.created_at }} mit der Vertragsnummer: {{request.contract_id}} und der RFID-Schlüessel-Nummer {{request.rfid_id}} wurde abgelehnt. Bei Rückfragen kontaktieren Sie bitte den Kundenservice der Stadtwerke Göttingen.

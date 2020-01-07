@@ -4,7 +4,8 @@ namespace App\Controllers;
 
 use \App\Models\User;
 use \Core\View;
-use \App\Models\Role;
+use \App\Models\RoleData;
+use \App\Models\EmployeeData;
 use \App\FlashMessage;
 
 /**
@@ -24,9 +25,11 @@ class Employee extends AdminAuth
     {
 
         $employees = User::getAllByType('employee');
-
-        View::renderTemplate('Employee/show-all.html', [
-            'employees' => $employees
+        $roles = RoleData::getAll();
+        
+        View::renderTemplate('Employee/all.html', [
+            'employees' => $employees,
+            'roles' => $roles
         ]);
 
     }
@@ -39,7 +42,11 @@ class Employee extends AdminAuth
     public function showSignupAction()
     {
 
-        View::renderTemplate('Employee/show-signup.html');
+        $roles = RoleData::getAll();
+
+        View::renderTemplate('Employee/signup.html', [
+            'roles' => $roles
+        ]);
 
     }
 
@@ -51,7 +58,7 @@ class Employee extends AdminAuth
     public function confirmSignupAction()
     {
 
-        $employee = new User($_POST);
+        $employee = new EmployeeData($_POST);
 
         if ($employee->save()) {
 
@@ -63,9 +70,12 @@ class Employee extends AdminAuth
     
         } else {
 
-           View::renderTemplate('Employee/show-signup.html', [
-               'employee' => $employee
-           ]);
+            $roles = RoleData::getAll();
+
+            View::renderTemplate('Employee/signup.html', [
+               'employee' => $employee,
+               'roles' => $roles
+            ]);
         } 
     }
 
