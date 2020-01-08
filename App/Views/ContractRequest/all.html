@@ -14,7 +14,7 @@
                 <tr>
                 <th scope="col">Vertragsnummer</th>
                 <th scope="col">RFID-Schlüssel</th>
-                <th scope="col">Gestellt am</th>
+                <th scope="col">Erstellt am</th>
                 <th scope="col">Funktionen</th>
                 </tr>
             </thead>
@@ -28,8 +28,8 @@
                     <td>{{request.rfid_id}}</td>
                     <td>{{request.created_at | date("d.m.Y")}}</td>
                     <td>
-                        {% if request.is_confirmed == 1 %}
-                            Besätigt
+                        {% if request.related_contract %}
+                        <a href="/contract/edit/{{request.related_contract}}">Zum Vertrag</a> 
                         {% else %}
                             <a href="/contractrequest/show-details/{{request.id}}">Details einsehen</a> 
                         {% endif %}

@@ -52,4 +52,21 @@ class Client extends User
 
         Mail::send($this->email, 'Vertragsanfrage abgelehnt', $text, $html);
     }
+
+     /**
+     * Send an email to the client containing the contract confirmation message
+     * 
+     * @param object $contract The contract that is confirmed
+     * 
+     * @return void
+     */
+    public function sendContractConfirmationEmail($contract)
+    {
+        $text = View::getTemplate('Contract/confirm_email.txt',
+                                 ['contract' => $contract]);
+        $html = View::getTemplate('Contract/confirm_email.html',
+                                 ['contract' => $contract]);
+
+        Mail::send($this->email, 'Vertrag best&#228;tigt', $text, $html);
+    }
 }

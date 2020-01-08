@@ -214,23 +214,25 @@ class ContractRequestData extends \Core\Model
         return $stmt->fetch(); 
     }
 
-    
     /**
-    * Confirm contract request by Contract ID
+    * Confirm contract request by inserting related contract ID
+    *
+    * @param integer $id The contract ID
     * 
     * @return void
     *
     */
-    public static function confirmByContractId($id) {
+    public function confirmByContractID($contractID) {
 
         $sql = 'UPDATE contract_request
-                SET is_confirmed = 1
-                WHERE contract_id = :contract_id';
+                SET related_contract = :contract_id
+                WHERE id = :id';
         
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
-        $stmt->bindValue(':contract_id', $id, PDO::PARAM_STR);
+        $stmt->bindValue(':contract_id', $contractID, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
         $stmt->execute();
     }

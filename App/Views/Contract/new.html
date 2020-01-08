@@ -44,6 +44,8 @@
             <input type="number" id="inputRfidId" name="rfid_id" placeholder="RFID-Schlüsselnummer" value="{{contract.rfid_id}}" class="form-control">
         </div>
 
+        <input type="hidden" name="request_id" value="{{contract.request_id}}">
+
         <hr>
 
         {% for carpark in carparks %}

@@ -147,5 +147,99 @@ class ContractData extends ContractRequestData
         return $stmt->fetch(); 
     }
 
+    /**
+     * Update the contract data
+     * 
+     * @param array $data Data from the edit profile form
+     * 
+     * @return boolean True if the data was updated, false otherwise
+    */  
+    public function update($data)
+    {
+        
+        $this->id = $data['contract_id'];
+
+        $this->validate();
+
+        if (empty($this->errors)) {
+            
+            $sql = 'UPDATE contract
+                    SET rfid_id = :rfid_id,
+                        carpark_id = :carpark_id,
+                        credit_item_per_day = :credit_item_per_day';
+
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':rfid_id', $this->rfid_id, PDO::PARAM_INT);
+            $stmt->bindValue(':carpark_id', $this->carpark_id, PDO::PARAM_INT);
+            $stmt->bindValue(':credit_item_per_day', $this->credit_item_per_day, PDO::PARAM_STR);
+
+            return $stmt->execute();
+        }
+
+        return false;
+    }
+
+     /**
+     * Block the contract 
+     * 
+     * 
+     * @return boolean True if the data was updated, false otherwise
+    */  
+    public function block()
+    {
+
+        $sql = 'UPDATE contract
+                SET is_blocked = 1
+                WHERE id = :contract_id';
+     
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':contract_id', $this->id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Unblock the contract 
+     * 
+     * 
+     * @return boolean True if the data was updated, false otherwise
+    */  
+    public function unblock()
+    {
+
+        $sql = 'UPDATE contract
+                SET is_blocked = 0
+                WHERE id = :contract_id';
+     
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':contract_id', $this->id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
+    * Delete contract  
+    * 
+    * @return boolean true if removing successfull, false otherwise
+    */
+    public function delete() {
+
+        $sql = 'DELETE FROM contract WHERE id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+
+        return $stmt->execute(); 
+    }
+
 }
+
 

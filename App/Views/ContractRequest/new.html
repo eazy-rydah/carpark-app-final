@@ -62,15 +62,15 @@
                     <td>{{request.rfid_id}}</td>
                     <td>{{request.created_at | date("d.m.Y")}}</td>
                     <td>
-                        {% if request.contract_id == 1 %}
+                        {% if request.is_confirmed == 1 %}
                             Bestätigt
                         {% else %}
                             Ausstehend
                         {% endif %}
                     </td>
                     <td>
-                        {% if request.contract_id == 1 %}
-                            <a href="#">Zum Vertrag</a>
+                        {% if request.is_confirmed == 1 %}
+                            <a href="/contract/show/{{contract.id}}">Zum Vertrag</a>
                         {% else %}
                             <a href="/contractrequest/delete/{{request.id}}">Zurückziehen</a>
                         {% endif %}
