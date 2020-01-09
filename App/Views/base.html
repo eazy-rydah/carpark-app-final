@@ -26,7 +26,7 @@
                 <ul class="navbar-nav ml-auto">
                     {% if current_user.role_id == 3 %}
                     <li class="nav-item">
-                    <a class="nav-link" href="/employeeadministrator/show">Mitarbeiterverwaltung</a>
+                    <a class="nav-link" href="/employeeadministration/show">Mitarbeiterverwaltung</a>
                     </li>
                     {% endif %}
                     {% if current_user.role_id == 2  %}
@@ -39,10 +39,10 @@
                     {% endif %}
                     {% if current_user.type == 'client' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Parkplätze</a>
+                        <a class="nav-link" href="#">Verträge</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/contractrequest/show">Parkplatz hinzufügen</a>
+                        <a class="nav-link" href="/parkingrequest/show">Parkplatz hinzufügen</a>
                     </li>
                     {% endif %}
                     <li class="nav-item">

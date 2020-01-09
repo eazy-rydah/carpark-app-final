@@ -5,11 +5,11 @@ namespace App\Models;
 use PDO;
 
 /**
- * CarparkData model
+ * Carpark model
  *
  * PHP version 7.0
  */
-class CarparkData extends \Core\Model
+class Carpark extends \Core\Model
 {
 
     /**

@@ -6,11 +6,11 @@ use PDO;
 use DateTime;
 
 /**
- * ContractRequestData model
+ * ContractRequest model
  *
  * PHP version 7.0
  */
-class ContractRequestData extends \Core\Model
+class ContractRequest extends \Core\Model
 {
 
     /**

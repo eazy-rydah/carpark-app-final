@@ -13,7 +13,7 @@ use \App\FlashMessage;
  * 
  * PHP version 7.0
  */  
-class EmployeeAdministrator extends AdminAuth
+class EmployeeAdministration extends AdminAuth
 {
 
     /**
@@ -27,7 +27,7 @@ class EmployeeAdministrator extends AdminAuth
         $employees = User::getAllByType('employee');
         $roles = Role::getAll();
         
-        View::renderTemplate('employeeadministrator/all.html', [
+        View::renderTemplate('employeeadministration/all.html', [
             'employees' => $employees,
             'roles' => $roles
         ]);
@@ -44,7 +44,7 @@ class EmployeeAdministrator extends AdminAuth
 
         $roles = Role::getAll();
 
-        View::renderTemplate('employeeadministrator/signup.html', [
+        View::renderTemplate('employeeadministration/signup.html', [
             'roles' => $roles
         ]);
 
@@ -66,13 +66,13 @@ class EmployeeAdministrator extends AdminAuth
 
             FlashMessage::add('Mitarbeiter erfolgreich angelegt', FlashMessage::SUCCESS);
 
-            $this->redirect('/employeeadministrator/show');
+            $this->redirect('/employeeadministration/show');
     
         } else {
 
             $roles = Role::getAll();
 
-            View::renderTemplate('employeeadministrator/signup.html', [
+            View::renderTemplate('employeeadministration/signup.html', [
                'employee' => $employee,
                'roles' => $roles
             ]);
@@ -102,6 +102,6 @@ class EmployeeAdministrator extends AdminAuth
 
         }
 
-        $this->redirect('/employeeadministrator/show');
+        $this->redirect('/employeeadministration/show');
     }
 }

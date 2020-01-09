@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Vertragsanfrage{% endblock %}
+{% block title %}Parkplatz Anfrage{% endblock %}
 
 {% block body %}
 
-    <h1>Vertragsanfrage</h1>
+    <h1>Parkplatz Anfrage</h1>
     <p>Fügen Sie ihren Parkplatz über Angabe der Vertragsdaten Ihrem Nutzerkonto hinzu.</p>
 
     {% if request.errors is not empty %}
@@ -16,16 +16,16 @@
         </ul>
     {% endif %}
 
-    <form method="post" action="#" id="formParking">
+    <form method="post" action="/parkingrequest/create" id="formParkingRequest">
 
         <div class="form-group">
             <label for="inputContractId">Vertragsnummer</label>
-            <input type="number" id="inputContractId" name="contract_id"  placeholder="Vertragsnummer" value="{{ contractRequest.contract_request_id }}" class="form-control">
+            <input type="number" id="inputContractId" name="contract_id"  placeholder="Vertragsnummer" value="{{ request.contract_id }}" class="form-control">
         </div>
 
         <div class="form-group">
             <label for="InputRfidId">RFID-Schlüssel-Nummer</label>
-            <input type="number" id="InputRfidId" name="rfid_id" placeholder="RFID-Schlüssel-Nummer" value="{{ contractRequest.rfid_request_id}}" class="form-control">
+            <input type="number" id="InputRfidId" name="rfid_id" placeholder="RFID-Schlüssel-Nummer" value="{{ request.rfid_id}}" class="form-control">
         </div>
 
         <div class="form-group">
@@ -70,9 +70,9 @@
                     </td>
                     <td>
                         {% if request.is_confirmed == 1 %}
-                            <a href="/contract/show/{{contract.id}}">Zum Vertrag</a>
+                            <a href="/parking/show/{{contract.id}}">Zum Vertrag</a>
                         {% else %}
-                            <a href="/contractrequest/delete/{{request.id}}">Zurückziehen</a>
+                            <a href="/parkingrequest/delete/{{request.id}}">Zurückziehen</a>
                         {% endif %}
                     </td>
                   </tr>
@@ -85,7 +85,7 @@
 
     {% else %}
 
-        <p>Keine Ausstehenden Anfragen</p>
+        <p>Keine ausstehenden Anfragen.</p>
 
     {% endif %}
 
