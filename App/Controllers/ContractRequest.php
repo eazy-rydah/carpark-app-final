@@ -19,7 +19,7 @@ class ContractRequest extends Authenticated
 {
  
     /**
-     * Show the contract request page
+     * Show page to create new request
      * 
      * @return void
      */
@@ -29,8 +29,8 @@ class ContractRequest extends Authenticated
 
         $this->requests = ContractRequestData::findAllByUserID($user->id);
 
-        View::renderTemplate('ContractRequest/new.html', [
-            'contractRequests' => $this->requests
+        View::renderTemplate('contractrequest/new.html', [
+            'requests' => $this->requests
         ]);
 
     }
@@ -52,18 +52,18 @@ class ContractRequest extends Authenticated
         } else {
 
             $requests = ContractRequestData::getAll();
-            View::renderTemplate('ContractRequest/all.html', [
+            View::renderTemplate('contractrequest/all.html', [
                 'requests' => $requests
             ]);
         }
     }
 
     /**
-     * Confirm the contract request 
+     * Create the contract request 
      * 
      * @return void
      */
-    public function confirmAction()
+    public function createAction()
     {
         $user = AuthMethod::getUser();
 
@@ -73,13 +73,13 @@ class ContractRequest extends Authenticated
 
         if ($request->save()) {
           
-            $this->redirect('/ContractRequest/show-success');
+            $this->redirect('/contractrequest/show-success');
     
         } else {
 
-           View::renderTemplate('ContractRequest/new.html', [
-               'contractRequest' => $request,
-               'contractRequests' => $requests
+           View::renderTemplate('contractrequest/new.html', [
+               'request' => $request,
+               'requests' => $requests
            ]);
         }
     }
@@ -91,7 +91,7 @@ class ContractRequest extends Authenticated
      */  
     public function showSuccessAction()
     {
-        View::renderTemplate('ContractRequest/success.html');
+        View::renderTemplate('contractrequest/success.html');
     }
 
     /**
@@ -151,7 +151,7 @@ class ContractRequest extends Authenticated
 
             $relatedClient = User::findByID($request->client_id);
     
-            View::renderTemplate('ContractRequest/details.html', [
+            View::renderTemplate('contractrequest/details.html', [
                'client' => $relatedClient, 
                'request' => $request
             ]);

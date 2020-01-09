@@ -23,6 +23,7 @@ class Profile extends Authenticated
         parent::before();
 
         $this->user = AuthMethod::getUser();
+
     }
 
     /**
@@ -32,19 +33,19 @@ class Profile extends Authenticated
      */
     public function showAction()
     {
-        View::renderTemplate('Profile/show.html', [
+        View::renderTemplate('profile/show.html', [
             'user' => $this->user
         ]);
     }
 
-    /*
-    * Show the form for editing the profile
-    *
-    * @return void
-    */
-    public function showEditAction()
+    /**
+     * Edit the profile
+     * 
+     * @return void
+     */
+    public function editAction()
     {
-        View::renderTemplate('Profile/edit.html', [
+        View::renderTemplate('profile/edit.html', [
             'user' => $this->user
         ]);
     }
@@ -54,7 +55,7 @@ class Profile extends Authenticated
      * 
      * @return void 
     */  
-    public function confirmUpdateAction()
+    public function updateAction()
     {
 
         if ($this->user->updateProfile($_POST)) {
@@ -65,7 +66,7 @@ class Profile extends Authenticated
 
         } else {
 
-            View::renderTemplate('Profile/edit.html', [
+            View::renderTemplate('profile/edit.html', [
                 'user' => $this->user
             ]);
         }

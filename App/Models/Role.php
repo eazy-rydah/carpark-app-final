@@ -6,11 +6,11 @@ use PDO;
 use DateTime;
 
 /**
- * RoleData model
+ * Role model
  *
  * PHP version 7.0
  */
-class RoleData extends \Core\Model
+class Role extends \Core\Model
 {
 
     /**

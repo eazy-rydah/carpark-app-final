@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 use \App\Models\User;
 use \Core\View;
-use \App\Models\RoleData;
-use \App\Models\EmployeeData;
+use \App\Models\Role;
+use \App\Models\Employee;
 use \App\FlashMessage;
 
 /**
@@ -13,7 +13,7 @@ use \App\FlashMessage;
  * 
  * PHP version 7.0
  */  
-class Employee extends AdminAuth
+class EmployeeAdministrator extends AdminAuth
 {
 
     /**
@@ -21,13 +21,13 @@ class Employee extends AdminAuth
      * 
      * @return void
      */  
-    public function showAllAction()
+    public function showAction()
     {
 
         $employees = User::getAllByType('employee');
-        $roles = RoleData::getAll();
+        $roles = Role::getAll();
         
-        View::renderTemplate('Employee/all.html', [
+        View::renderTemplate('employeeadministrator/all.html', [
             'employees' => $employees,
             'roles' => $roles
         ]);
@@ -42,9 +42,9 @@ class Employee extends AdminAuth
     public function showSignupAction()
     {
 
-        $roles = RoleData::getAll();
+        $roles = Role::getAll();
 
-        View::renderTemplate('Employee/signup.html', [
+        View::renderTemplate('employeeadministrator/signup.html', [
             'roles' => $roles
         ]);
 
@@ -58,7 +58,7 @@ class Employee extends AdminAuth
     public function confirmSignupAction()
     {
 
-        $employee = new EmployeeData($_POST);
+        $employee = new Employee($_POST);
 
         if ($employee->save()) {
 
@@ -66,13 +66,13 @@ class Employee extends AdminAuth
 
             FlashMessage::add('Mitarbeiter erfolgreich angelegt', FlashMessage::SUCCESS);
 
-            $this->redirect('/employee/show-all');
+            $this->redirect('/employeeadministrator/show');
     
         } else {
 
-            $roles = RoleData::getAll();
+            $roles = Role::getAll();
 
-            View::renderTemplate('Employee/signup.html', [
+            View::renderTemplate('employeeadministrator/signup.html', [
                'employee' => $employee,
                'roles' => $roles
             ]);
@@ -102,6 +102,6 @@ class Employee extends AdminAuth
 
         }
 
-        $this->redirect('/employee/show-all');
+        $this->redirect('/employeeadministrator/show');
     }
 }

@@ -12,7 +12,7 @@ use \App\Mail;
  *
  * PHP version 7.0
  */
-class EmployeeData extends User
+class Employee extends User
 {
 
     /**
