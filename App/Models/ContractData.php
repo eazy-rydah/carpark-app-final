@@ -46,8 +46,6 @@ class ContractData extends ContractRequestData
 
         if (empty($this->errors)) {
 
-           // var_dump($this); exit;
-
             $sql = 'INSERT INTO contract (
                                 id,  
                                 carpark_id,
@@ -184,7 +182,6 @@ class ContractData extends ContractRequestData
      /**
      * Block the contract 
      * 
-     * 
      * @return boolean True if the data was updated, false otherwise
     */  
     public function block()
@@ -204,7 +201,6 @@ class ContractData extends ContractRequestData
 
     /**
      * Unblock the contract 
-     * 
      * 
      * @return boolean True if the data was updated, false otherwise
     */  
@@ -239,7 +235,6 @@ class ContractData extends ContractRequestData
 
         return $stmt->execute(); 
     }
-
 }
 
 

@@ -28,7 +28,7 @@ class Error
     }
 
     /**
-     * Exception handler.
+     * Exception handler
      *
      * @param Exception $exception  The exception
      *

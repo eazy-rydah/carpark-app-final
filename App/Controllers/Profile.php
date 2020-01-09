@@ -25,7 +25,6 @@ class Profile extends Authenticated
         $this->user = AuthMethod::getUser();
     }
 
-
     /**
      * Show the profile
      * 

@@ -184,8 +184,6 @@ class ContractRequest extends Authenticated
 
             $request->delete();
 
-            // relatedclient->sendDenyEmail
-
             FlashMessage::add('Vertragsanfrage abgelehnt', FlashMessage::INFO);
 
             $this->redirect('/contractrequest/show-all');

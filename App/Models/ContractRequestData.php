@@ -64,7 +64,6 @@ class ContractRequestData extends \Core\Model
                         :client_id,
                         :created_at
                     )';
-
             
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -157,7 +156,6 @@ class ContractRequestData extends \Core\Model
     * Delete contract request 
     * 
     * @return boolean true if removing successfull, false otherwise
-    *
     */
     public function delete() {
 
@@ -220,7 +218,6 @@ class ContractRequestData extends \Core\Model
     * @param integer $id The contract ID
     * 
     * @return void
-    *
     */
     public function confirmByContractID($contractID) {
 

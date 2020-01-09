@@ -53,7 +53,7 @@ class Client extends User
         Mail::send($this->email, 'Vertragsanfrage abgelehnt', $text, $html);
     }
 
-     /**
+    /**
      * Send an email to the client containing the contract confirmation message
      * 
      * @param object $contract The contract that is confirmed
