@@ -9,7 +9,7 @@ use \App\Models\Employee;
 use \App\FlashMessage;
 
 /**
- * Employee controller
+ * Employee administration controller
  * 
  * PHP version 7.0
  */  

@@ -5,11 +5,11 @@ namespace App\Models;
 use PDO;
 
 /**
- * ContractData model
+ * Contract model
  *
  * PHP version 7.0
  */
-class ContractData extends ContractRequestData
+class Contract extends ContractRequest
 {
 
     /**

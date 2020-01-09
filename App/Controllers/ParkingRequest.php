@@ -10,7 +10,7 @@ use \App\Models\User;
 use \App\Models\ContractRequest;
 
 /**
- * Login controller
+ * Parking request controller
  * 
  * PHP version 7.0
  */ 
@@ -107,8 +107,6 @@ class ParkingRequest extends ClientAuth
             $this->redirect('/');
 
         }
-    }
-
-   
+    }   
 
 }

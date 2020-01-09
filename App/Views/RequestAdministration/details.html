@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Vertragsanfrage{% endblock %}
+{% block title %}Anfragen Verwaltung{% endblock %}
 
 {% block body %}
 
-    <h1>Vertragsanfrage</h1>
+    <h1>Anfragen Verwaltung</h1>
 
     <form method="POST" id="formContract" action="/contract/new">
 
@@ -42,10 +42,10 @@
         </div>
 
         <div class="form-group">
-            <a href="/contractrequest/deny/{{request.id}}" class="btn btn-warning">Ablehnen</a>
+            <a href="/requestadministration/deny/{{request.id}}" class="btn btn-warning">Ablehnen</a>
         </div>
 
-        <a href="/contractrequest/show-all" class="btn btn-secondary btn-sm">Zurück</a>
+        <a href="/requestadministration/show-all" class="btn btn-secondary btn-sm">Zurück</a>
 
     </form>
 

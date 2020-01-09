@@ -6,7 +6,7 @@ use \App\AuthMethod;
 use \App\FlashMessage;
 
 /**
- * Administrator base controller
+ * Employee base controller
  * 
  * PHP version 7.0
  */ 

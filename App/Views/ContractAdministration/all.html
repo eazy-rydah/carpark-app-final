@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Vertrag{% endblock %}
+{% block title %}Vertragsverwaltung{% endblock %}
 
 {% block body %}
 
-    <h1>Vertrag</h1>
+    <h1>Vertragsverwaltung</h1>
 
     {% if contracts %}
 
@@ -35,7 +35,7 @@
                     {% endif %}</td>
                     <td>
                      
-                    <a href="/contract/edit/{{contract.id}}">Bearbeiten</a> 
+                    <a href="/contractadministration/edit/{{contract.id}}">Bearbeiten</a> 
                     
                     </td>
                   </tr>

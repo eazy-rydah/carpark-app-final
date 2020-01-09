@@ -5,19 +5,32 @@ namespace App\Controllers;
 use \Core\View;
 use \App\AuthMethod;
 use \App\FlashMessage;
-use \App\Models\CarparkData;
-use \App\Models\ContractData;
-use \App\Models\ContractRequestData;
+use \App\Models\Carpark;
+use \App\Models\Contract;
+use \App\Models\ContractRequest;
 use \App\Models\Client;
 
 /**
- * Login controller
+ * Contract controller
  * 
  * PHP version 7.0
  */ 
-class Contract extends EmployeeAuth
+class ContractAdministration extends EmployeeAuth
 {
- 
+    /**
+     * Show the contract request page
+     * 
+     * @return void
+     */
+    public function showAction()
+    {
+       $contracts = Contract::getAll();
+
+       View::renderTemplate('contractadministration/all.html', [
+        'contracts' => $contracts
+        ]);
+    }
+
     /**
      * Show new contract page
      * 
@@ -25,11 +38,11 @@ class Contract extends EmployeeAuth
      */
     public function newAction()
     {
-        $contract = new ContractData($_POST);
+        $contract = new Contract($_POST);
 
         $client = Client::findByID($contract->client_id);
 
-        $carparks = CarparkData::getAll();
+        $carparks = Carpark::getAll();
 
         View::renderTemplate('Contract/new.html', [
             'client' => $client, 
@@ -45,13 +58,13 @@ class Contract extends EmployeeAuth
      */
     public function createAction()
     {
-        $contract = new ContractData($_POST);
+        $contract = new Contract($_POST);
 
         $client = Client::findByID($contract->client_id);
         
         if ($contract->save()) {
 
-            $relatedRequest = ContractRequestData::findByID($contract->request_id);
+            $relatedRequest = ContractRequest::findByID($contract->request_id);
 
             $relatedRequest->confirmByContractID($contract->contract_id);
 
@@ -63,7 +76,7 @@ class Contract extends EmployeeAuth
     
         } else {
 
-            $carparks = CarparkData::getAll();
+            $carparks = Carpark::getAll();
 
             View::renderTemplate('Contract/new.html', [
             'client' => $client, 
@@ -73,19 +86,7 @@ class Contract extends EmployeeAuth
         } 
     }
 
-    /**
-     * Show the contract request page
-     * 
-     * @return void
-     */
-    public function showAllAction()
-    {
-       $contracts = ContractData::getAll();
-
-       View::renderTemplate('Contract/all.html', [
-        'contracts' => $contracts
-        ]);
-    }
+  
 
     /**
      * Show the contract edit page
@@ -96,11 +97,11 @@ class Contract extends EmployeeAuth
     {
         $id = $this->route_params['id'];
 
-        $contract= ContractData::findByID($id);
+        $contract= Contract::findByID($id);
 
         $relatedClient = Client::findByID($contract->client_id);
 
-        $carparks = CarparkData::getAll();
+        $carparks = Carpark::getAll();
 
        View::renderTemplate('Contract/edit.html', [
             'client' => $relatedClient, 
@@ -116,7 +117,7 @@ class Contract extends EmployeeAuth
      */
     public function updateAction()
     {
-        $contract = new ContractData($_POST);
+        $contract = new Contract($_POST);
 
         if ($contract->update($_POST)) {
           
@@ -128,7 +129,7 @@ class Contract extends EmployeeAuth
 
            $relatedClient = Client::findByID($contract->client_id);
 
-           $carparks = CarparkData::getAll();
+           $carparks = Carpark::getAll();
     
            View::renderTemplate('Contract/edit.html', [
                 'client' => $relatedClient, 
@@ -147,7 +148,7 @@ class Contract extends EmployeeAuth
     {
         $id = $this->route_params['id'];
 
-        $contract= ContractData::findByID($id);
+        $contract= Contract::findByID($id);
 
         if ($contract->block()) {
           
@@ -159,7 +160,7 @@ class Contract extends EmployeeAuth
 
            $relatedClient = Client::findByID($contract->client_id);
 
-           $carparks = CarparkData::getAll();
+           $carparks = Carpark::getAll();
     
            View::renderTemplate('Contract/edit.html', [
                 'client' => $relatedClient, 
@@ -178,7 +179,7 @@ class Contract extends EmployeeAuth
     {
         $id = $this->route_params['id'];
 
-        $contract= ContractData::findByID($id);
+        $contract= Contract::findByID($id);
 
         if ($contract->unblock()) {
           
@@ -190,7 +191,7 @@ class Contract extends EmployeeAuth
 
            $relatedClient = Client::findByID($contract->client_id);
 
-           $carparks = CarparkData::getAll();
+           $carparks = Carpark::getAll();
     
            View::renderTemplate('Contract/edit.html', [
                 'client' => $relatedClient, 
@@ -209,11 +210,11 @@ class Contract extends EmployeeAuth
     {        
         $id = $this->route_params['id'];
 
-        $contract= ContractData::findByID($id);
+        $contract= Contract::findByID($id);
 
         $relatedClient = Client::findByID($contract->client_id);
 
-        $carparks = CarparkData::getAll();
+        $carparks = Carpark::getAll();
 
         View::renderTemplate('Contract/delete.html', [
             'client' => $relatedClient, 
@@ -231,7 +232,7 @@ class Contract extends EmployeeAuth
     {        
         $id = $this->route_params['id'];
 
-        $contract= ContractData::findByID($id);
+        $contract= Contract::findByID($id);
 
         if ($contract->delete()) {
 
