@@ -45,9 +45,9 @@ class Client extends User
      */
     public function sendRequestDenyEmail($request)
     {
-        $text = View::getTemplate('ParkingRequest/deny_email.txt',
+        $text = View::getTemplate('parkingrequest/deny_email.txt',
                                  ['request' => $request]);
-        $html = View::getTemplate('ParkingRequest/deny_email.html',
+        $html = View::getTemplate('parkingrequest/deny_email.html',
                                  ['request' => $request]);
 
         Mail::send($this->email, 'Parkplatz Anfrage', $text, $html);
@@ -62,9 +62,9 @@ class Client extends User
      */
     public function sendContractConfirmationEmail($contract)
     {
-        $text = View::getTemplate('Contract/confirm_email.txt',
+        $text = View::getTemplate('contractadministration/confirm_email.txt',
                                  ['contract' => $contract]);
-        $html = View::getTemplate('Contract/confirm_email.html',
+        $html = View::getTemplate('contractadministration/confirm_email.html',
                                  ['contract' => $contract]);
 
         Mail::send($this->email, 'Parkplatz Anfrage', $text, $html);

@@ -3,10 +3,9 @@
 namespace App\Controllers;
 
 use \Core\View;
-use \App\AuthMethod;
+// use \App\AuthMethod;
 use \App\FlashMessage;
-use \App\Config;
-use \App\Models\User;
+//use \App\Config;
 use \App\Models\ContractRequest;
 
 /**
@@ -51,6 +50,7 @@ class ParkingRequest extends ClientAuth
      */
     public function createAction()
     {
+  
         $request = new ContractRequest($_POST, $this->user->id);
 
         if ($request->save()) {
@@ -108,5 +108,4 @@ class ParkingRequest extends ClientAuth
 
         }
     }   
-
 }

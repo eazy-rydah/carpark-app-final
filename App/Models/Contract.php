@@ -33,6 +33,9 @@ class Contract extends ContractRequest
             $this->$key = $value;
         };
 
+        if (isset($data['contract_id'])) {
+            $this->id = $data['contract_id'];
+        }
     }
 
     /**
@@ -90,9 +93,23 @@ class Contract extends ContractRequest
      */  
     public function validate()
     {
-       
+   
         parent::validate();
 
+        if (! isset($this->contract_ignore_id)) {
+
+            if (static::contractExists($this->id)) {
+                $this->errors[] = 'Vertragsnummer existiert bereits';
+            }
+        }
+            
+        if (! isset($this->rfid_ignore_id)) {
+        
+            if(static::rfidExists($this->rfid_id)) {
+                $this->errors[] = 'RFID-Schlüsselnummer existiert bereits';
+            }
+        }
+     
         if (!isset($this->carpark_id)) {
             $this->errors[] = 'Bitte Parkhaus auswählen';
         }
@@ -122,7 +139,7 @@ class Contract extends ContractRequest
         return $stmt->fetchAll(); 
     }
 
-      /**
+    /**
      * Find contract  by ID
      * 
      * @param integer $id The ID
@@ -148,23 +165,27 @@ class Contract extends ContractRequest
     /**
      * Update the contract data
      * 
-     * @param array $data Data from the edit profile form
-     * 
      * @return boolean True if the data was updated, false otherwise
     */  
-    public function update($data)
+    public function update()
     {
-        
-        $this->id = $data['contract_id'];
+        if (static::contractExists($this->id)) {
+            $this->contract_ignore_id = $this->id;
+        }
 
+        if (static::rfidExists($this->rfid_id)) {
+            $this->rfid_ignore_id = $this->rfid_id;
+        }
+  
         $this->validate();
 
         if (empty($this->errors)) {
-            
+   
             $sql = 'UPDATE contract
                     SET rfid_id = :rfid_id,
                         carpark_id = :carpark_id,
-                        credit_item_per_day = :credit_item_per_day';
+                        credit_item_per_day = :credit_item_per_day
+                    WHERE id = :id';
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -172,6 +193,7 @@ class Contract extends ContractRequest
             $stmt->bindValue(':rfid_id', $this->rfid_id, PDO::PARAM_INT);
             $stmt->bindValue(':carpark_id', $this->carpark_id, PDO::PARAM_INT);
             $stmt->bindValue(':credit_item_per_day', $this->credit_item_per_day, PDO::PARAM_STR);
+            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
             return $stmt->execute();
         }
@@ -208,7 +230,7 @@ class Contract extends ContractRequest
     {
 
         $sql = 'UPDATE contract
-                SET is_blocked = 0
+                SET is_blocked = NULL
                 WHERE id = :contract_id';
      
         $db = static::getDB();
@@ -234,6 +256,67 @@ class Contract extends ContractRequest
         $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
 
         return $stmt->execute(); 
+    }
+
+    /**
+     * See if a contract record already exists with the specified contract id
+     * 
+     * @param string $id The contract id to search for
+     * 
+     * @return boolean True if a record already exists with specified id, false 
+     * otherwise
+     */ 
+    public function contractExists($id)
+    {
+        $contract = static::findByID($id);
+
+        if ($contract) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Find contract  by rfid ID
+     * 
+     * @param integer $id The rfid ID
+     * 
+     * @return mixed Contract object if found, false otherwise
+     */  
+    public static function findByRFID($id)
+    {
+        $sql = 'SELECT * FROM contract WHERE rfid_id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        // fetch object with dynamic namespace, instead of array
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        
+        $stmt->execute();
+
+        return $stmt->fetch(); 
+    }
+
+     /**
+     * See if a contract record already exists with the specified rfid id
+     * 
+     * @param string $id The rfid id to search for
+     * 
+     * @return boolean True if a record already exists with specified rfid id, 
+     * false otherwise
+     */ 
+    public function rfidExists($id)
+    {
+        $contract = static::findByRFID($id);
+
+        if ($contract) {
+            return true;
+        }
+
+        return false;
     }
 }
 

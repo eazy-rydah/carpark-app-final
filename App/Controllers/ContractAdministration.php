@@ -39,16 +39,15 @@ class ContractAdministration extends EmployeeAuth
     public function newAction()
     {
         $contract = new Contract($_POST);
-
-        $client = Client::findByID($contract->client_id);
+        $relatedClient = Client::findByID($contract->client_id);
 
         $carparks = Carpark::getAll();
 
-        View::renderTemplate('Contract/new.html', [
-            'client' => $client, 
+        View::renderTemplate('contractadministration/new.html', [
+            'client' => $relatedClient, 
             'contract' => $contract,
             'carparks' => $carparks
-        ]);
+        ]); 
     }
 
     /**
@@ -59,34 +58,29 @@ class ContractAdministration extends EmployeeAuth
     public function createAction()
     {
         $contract = new Contract($_POST);
-
         $client = Client::findByID($contract->client_id);
         
         if ($contract->save()) {
 
             $relatedRequest = ContractRequest::findByID($contract->request_id);
-
             $relatedRequest->confirmByContractID($contract->contract_id);
 
             $client->sendContractConfirmationEmail($contract);
           
-            FlashMessage::add('Vertrag erfolgreich angelegt', FlashMessage::SUCCESS);
-
-            $this->redirect('/contractrequest/show-all');
+            FlashMessage::add('Vertrag erfolgreich angelegt');
+            $this->redirect('/requestadministration/show');
     
         } else {
 
             $carparks = Carpark::getAll();
 
-            View::renderTemplate('Contract/new.html', [
+            View::renderTemplate('contractadministration/new.html', [
             'client' => $client, 
             'contract' => $contract,
             'carparks' => $carparks
             ]);
         } 
     }
-
-  
 
     /**
      * Show the contract edit page
@@ -96,14 +90,12 @@ class ContractAdministration extends EmployeeAuth
     public function editAction()
     {
         $id = $this->route_params['id'];
-
-        $contract= Contract::findByID($id);
+        $contract = Contract::findByID($id);
 
         $relatedClient = Client::findByID($contract->client_id);
-
         $carparks = Carpark::getAll();
 
-       View::renderTemplate('Contract/edit.html', [
+        View::renderTemplate('contractadministration/edit.html', [
             'client' => $relatedClient, 
             'contract' => $contract,
             'carparks' => $carparks
@@ -119,11 +111,11 @@ class ContractAdministration extends EmployeeAuth
     {
         $contract = new Contract($_POST);
 
-        if ($contract->update($_POST)) {
+        if ($contract->update()) {
           
             FlashMessage::add('Änderungen erfolgreich gespeichert', FlashMessage::SUCCESS);
 
-            $this->redirect('/contract/show-all');
+            $this->redirect('/contractadministration/show');
     
         } else {
 
@@ -131,7 +123,7 @@ class ContractAdministration extends EmployeeAuth
 
            $carparks = Carpark::getAll();
     
-           View::renderTemplate('Contract/edit.html', [
+           View::renderTemplate('contractadministration/edit.html', [
                 'client' => $relatedClient, 
                 'contract' => $contract,
                 'carparks' => $carparks
@@ -147,22 +139,19 @@ class ContractAdministration extends EmployeeAuth
     public function blockAction()
     {
         $id = $this->route_params['id'];
-
         $contract= Contract::findByID($id);
 
         if ($contract->block()) {
           
             FlashMessage::add('Vertrag wurde blockiert', FlashMessage::WARNING);
-
-            $this->redirect('/contract/edit/' . $id);
+            $this->redirect('/contractadministration/edit/' . $id);
     
         } else {
 
            $relatedClient = Client::findByID($contract->client_id);
-
            $carparks = Carpark::getAll();
     
-           View::renderTemplate('Contract/edit.html', [
+           View::renderTemplate('contractadministration/edit.html', [
                 'client' => $relatedClient, 
                 'contract' => $contract,
                 'carparks' => $carparks
@@ -178,22 +167,19 @@ class ContractAdministration extends EmployeeAuth
     public function unblockAction()
     {
         $id = $this->route_params['id'];
-
         $contract= Contract::findByID($id);
 
         if ($contract->unblock()) {
           
             FlashMessage::add('Vertrag wurde entsperrt', FlashMessage::WARNING);
-
-            $this->redirect('/contract/edit/' . $id);
+            $this->redirect('/contractadministration/edit/' . $id);
     
         } else {
 
            $relatedClient = Client::findByID($contract->client_id);
-
            $carparks = Carpark::getAll();
     
-           View::renderTemplate('Contract/edit.html', [
+           View::renderTemplate('contractadministration/edit.html', [
                 'client' => $relatedClient, 
                 'contract' => $contract,
                 'carparks' => $carparks
@@ -209,14 +195,12 @@ class ContractAdministration extends EmployeeAuth
     public function deleteAction()
     {        
         $id = $this->route_params['id'];
-
         $contract= Contract::findByID($id);
 
         $relatedClient = Client::findByID($contract->client_id);
-
         $carparks = Carpark::getAll();
 
-        View::renderTemplate('Contract/delete.html', [
+        View::renderTemplate('contractadministration/delete.html', [
             'client' => $relatedClient, 
             'contract' => $contract,
             'carparks' => $carparks
@@ -238,11 +222,11 @@ class ContractAdministration extends EmployeeAuth
 
             FlashMessage::add('Vertrag wurde gelöscht', FlashMessage::INFO);
 
-            $this->redirect('/contract/show-all');
+            $this->redirect('/contractadministration/show');
 
         } else {
 
-            $this->redirect('/contract/edit/' . $contract->contract_id);
+            $this->redirect('/contractadministration/edit/' . $contract->contract_id);
 
         }
     }  

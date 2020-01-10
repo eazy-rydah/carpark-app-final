@@ -46,6 +46,7 @@ class ContractRequest extends \Core\Model
      */ 
     public function save()
     {
+
         $this->validate();
 
         if (empty($this->errors)) {
@@ -68,8 +69,8 @@ class ContractRequest extends \Core\Model
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue(':contract_id', $this->contract_id, PDO::PARAM_STR);
-            $stmt->bindValue(':rfid_id', $this->rfid_id, PDO::PARAM_STR);
+            $stmt->bindValue(':contract_id', $this->contract_id, PDO::PARAM_INT);
+            $stmt->bindValue(':rfid_id', $this->rfid_id, PDO::PARAM_INT);
             $stmt->bindValue(':client_id', $this->user_id, PDO::PARAM_INT);
             $stmt->bindValue(':created_at', $nowISO8601, PDO::PARAM_STR);
 
@@ -93,16 +94,16 @@ class ContractRequest extends \Core\Model
             $this->errors[] = 'Vertragsnummer angeben';
         }
 
-        if (strlen($this->contract_id) < 6) {
-                $this->errors[] = 'Vertragsnummer muss mindestens 6 Zeichen lang sein';
+        if (strlen($this->contract_id) != 6) {
+                $this->errors[] = 'Vertragsnummer muss 6 Stellen enthalten';
         }
 
         if ($this->rfid_id == '') {
             $this->errors[] = 'RFID-Schlüssel-Nummer angeben';
         }
 
-        if (strlen($this->rfid_id) < 6) {
-            $this->errors[] = 'RFID-Schlüsselnummer muss mindestens 6 Zeichen lang sein';
+        if (strlen($this->rfid_id) != 6) {
+            $this->errors[] = 'RFID-Schlüsselnummer muss 6 Stellen enthalten';
         }
     }
 

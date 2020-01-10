@@ -29,7 +29,7 @@
                     <td>{{request.created_at | date("d.m.Y")}}</td>
                     <td>
                         {% if request.related_contract %}
-                        <a href="/contract/edit/{{request.related_contract}}">Zum Vertrag</a> 
+                        <a href="/contractadministration/edit/{{request.related_contract}}">Zum Vertrag</a> 
                         {% else %}
                             <a href="/requestadministration/show-details/{{request.id}}">Details einsehen</a> 
                         {% endif %}

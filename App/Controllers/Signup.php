@@ -21,7 +21,7 @@ class Signup extends \Core\Controller
      */  
     public function showAction()
     {
-        View::renderTemplate('Signup/show.html');
+        View::renderTemplate('signup/show.html');
     }
 
     /**
@@ -42,7 +42,7 @@ class Signup extends \Core\Controller
     
         } else {
 
-           View::renderTemplate('Signup/show.html', [
+           View::renderTemplate('signup/show.html', [
                'user' => $user
            ]);
         }
@@ -55,7 +55,7 @@ class Signup extends \Core\Controller
      */  
     public function showSuccessAction()
     {
-        View::renderTemplate('Signup/success.html');
+        View::renderTemplate('signup/success.html');
     }
 
     /**
@@ -78,6 +78,6 @@ class Signup extends \Core\Controller
      */  
     public function showActivatedAction()
     {
-        View::renderTemplate('Signup/activated.html');
+        View::renderTemplate('signup/activated.html');
     }
 }
