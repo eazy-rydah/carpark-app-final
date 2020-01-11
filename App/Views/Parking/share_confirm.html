@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Parkplatzfreigabe{% endblock %}
+
+{% block body %}
+
+    <h1>Parkplatzfreigabe</h1>
+
+    
+    {% if share.errors is not empty %}
+
+        <p>Fehlermeldungen:</p>
+        <ul>
+            {% for error in share.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+        <hr>
+    <form method="post" action="/parking/{{contract.id}}/create-share" id="formParkingShareNew">
+
+        {% for carpark in carparks %}
+    
+        {% if contract.carpark_id == carpark.id %}
+        <dl class="row mt-3">
+            <dt class="col-sm-3">Parkhaus</dt>
+            <dd class="col-sm-9">{{ carpark.name }}</dd>
+            <dt class="col-sm-3">Adresse</dt>
+            <dd class="col-sm-9">{{carpark.street}}  {{carpark.street_number}}, {{carpark.zip_code}} {{carpark.place}}</dd>
+        {% endif %}
+
+        {% endfor %}
+            <dt class="col-sm-3">RFID-Schlüsselnummer</dt>
+            <dd class="col-sm-9">{{ contract.rfid_id }}</dd>
+            <dt class="col-sm-3">Vertragsnummer</dt>
+            <dd class="col-sm-9">{{ contract.id }}</dd>
+            <dt class="col-sm-3">Startdatum</dt>
+            <dd class="col-sm-9">{{ share.start_date | date("d.m.y")}}</dd>
+            <dt class="col-sm-3">Enddatum</dt>
+            <dd class="col-sm-9">{{ share.end_date | date("d.m.y")}}</dd>
+            <dt class="col-sm-3">Anzahl Tage</dt>
+            <dd class="col-sm-9">{{ share.amount_days}} 
+            <dt class="col-sm-3">Gutschrift</dt>
+            <dd class="col-sm-9">{{ share.credit_item |number_format(2, ',', ',')}} €</dd>
+            
+        </dl>
+
+        <input type="hidden" name="contract_id" value="{{contract.id}}">
+        <input type="hidden" name="start_date" value="{{ share.start_date }}">
+        <input type="hidden" name="end_date" value="{{ share.end_date }}">
+        <input type="hidden" name="amount_days" value="{{ share.amount_days }}">
+        <input type="hidden" name="credit_item" value="{{ share.credit_item }}">
+
+    
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">AGBs zur Parkplatzfreigabe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto distinctio, odit sunt voluptatem accusamus nostrum eaque rem quisquam illo, harum nulla ad dolor delectus! Enim dicta reiciendis dolores eius quas!</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto distinctio, odit sunt voluptatem accusamus nostrum eaque rem quisquam illo, harum nulla ad dolor delectus! Enim dicta reiciendis dolores eius quas!</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto distinctio, odit sunt voluptatem accusamus nostrum eaque rem quisquam illo, harum nulla ad dolor delectus! Enim dicta reiciendis dolores eius quas!</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto distinctio, odit sunt voluptatem accusamus nostrum eaque rem quisquam illo, harum nulla ad dolor delectus! Enim dicta reiciendis dolores eius quas!</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto distinctio, odit sunt voluptatem accusamus nostrum eaque rem quisquam illo, harum nulla ad dolor delectus! Enim dicta reiciendis dolores eius quas!</p>
+        
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+            <!-- Button trigger modal -->
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="inputCheckAGB" name="agb_check">
+            <label class="form-check-label" for="inputCheckAGB"><a href="" class="link"  data-toggle="modal" data-target="#exampleModalScrollable">
+                AGBs
+            </a> akzeptieren</label>
+            
+    
+          </div>
+       
+        <div class="form-group">
+            <input type="submit" value="Freigabe erstellen" class=" btn btn-success">
+        </div>
+        
+        <a href="/parking/{{contract.id}}/share">Zurück</a>
+
+    </form>
+
+    {% if shares %}
+
+        <hr>
+        <h3>Erfolgt</h3>
+        <table class="table table-striped">
+
+            <thead>
+                <tr>
+                <th scope="col">Startdatum</th>
+                <th scope="col">Enddatum</th>
+                <th scope="col">Gutschrift</th>
+                <th scope="col">Funktionen</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for share in shares %}
+    
+                  <tr>
+                    <td>{{share.start_date}}</td>
+                    <td>{{share.end_date}}</td>
+                    <td>Betrag X in €</td>
+                    <td>
+                        {% if share.is_active %}
+                            Aktiv
+                        {% else %}
+                            <a href="#">/parking/cancel-share/{{share.id}}</a>
+                        {% endif %}
+                    </td>
+
+                    </td>
+                  </tr>
+             
+                {% endfor %}
+            
+            </tbody>
+
+        </table>
+    </div>
+    {% endif %}
+
+{% endblock %}

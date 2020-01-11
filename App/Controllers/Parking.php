@@ -61,13 +61,13 @@ class Parking extends ClientAuth
     {
         
         $id = $this->route_params['id'];
-        $parking = Contract::findByID($id);
-        $shares = Share::getAllByContractID($parking->id);
+        $contract = Contract::findByID($id);
+        $shares = Share::getAllByContractID($contract->id);
 
-        if ($parking->is_blocked != 1) {
+        if ($contract->is_blocked != 1) {
 
             View::renderTemplate('parking/share_new.html', [
-            'contract' => $parking, 
+            'contract' => $contract, 
             'shares' => $shares
             ]);
 
@@ -84,27 +84,30 @@ class Parking extends ClientAuth
      * 
      * @return void
      */
-    public function createShareAction()
+    public function calculateShareAction()
     {
+
         $id = $this->route_params['id'];
-        $parking = Contract::findByID($id);
+        $contract = Contract::findByID($id);
 
-        if ($parking->is_blocked != 1) {
+        if ($contract->is_blocked != 1) {
 
-            $shares = Share::getAllByContractID($parking->id);
+            $shares = Share::getAllByContractID($contract->id);
             $share = new Share($_POST);
     
+            if ($share->calculateCreditItem($contract)) {
 
-            if ($share->save()) {
-
-                FlashMessage::add('Parkplatz erfolgreich freigegeben');
-                $this->redirect('/parking/'. $parking->id .'/share');
+                View::renderTemplate('parking/share_new.html', [
+                    'share' => $share,
+                    'contract' => $contract,
+                    'shares' => $shares
+                ]);
 
             } else {
 
                 View::renderTemplate('parking/share_new.html', [
                     'share' => $share,
-                    'contract' => $parking,
+                    'contract' => $contract,
                     'shares' => $shares
                 ]);
             }
@@ -117,5 +120,72 @@ class Parking extends ClientAuth
         }        
     }
 
-   
+      /**
+     * show calculated share for selected parking
+     * 
+     * @return void
+     */
+    public function confirmShareAction()
+    {
+        $id = $this->route_params['id'];
+        $contract = Contract::findByID($id);
+        $carparks = Carpark::getAll();
+
+        if ($contract->is_blocked != 1) {
+
+            $share = new Share($_POST);
+
+            View::renderTemplate('parking/share_confirm.html', [
+                'share' => $share,
+                'contract' => $contract,
+                'carparks' => $carparks
+            ]);
+        
+        } else {
+
+            FlashMessage::add('Der Parkplatz kann zur Zeit nicht freigegeben werden. Bitte kontaktieren Sie den Kundenservice', FlashMessage::WARNING);
+
+            $this->redirect('/parking/show');
+        }        
+    }
+
+    
+      /**
+     * show calculated share for selected parking
+     * 
+     * @return void
+     */
+    public function createShareAction()
+    {
+        $id = $this->route_params['id'];
+        $contract = Contract::findByID($id);
+        $carparks = Carpark::getAll();
+
+        if ($contract->is_blocked != 1) {
+
+            $shares = Share::getAllByContractID($contract->id);
+            $share = new Share($_POST);
+
+            if ($share->save()) {
+
+                FlashMessage::add('Der Parkplatz wurde erfolgreich freigegeben');
+
+                $this->redirect('/parking/'. $contract->id .'/share');
+
+            } else {
+
+                View::renderTemplate('parking/share_confirm.html', [
+                    'share' => $share,
+                    'contract' => $contract,
+                    'carparks' => $carparks
+                ]);
+            }
+        
+        } else {
+
+            FlashMessage::add('Der Parkplatz kann zur Zeit nicht freigegeben werden. Bitte kontaktieren Sie den Kundenservice', FlashMessage::WARNING);
+
+            $this->redirect('/parking/show');
+        }        
+    }
 }

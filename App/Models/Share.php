@@ -52,6 +52,36 @@ class Share extends \Core\Model
         }
     }
 
+    /**
+     * Calculate credit item the share model with the current property values
+     * 
+     * @param Contract $contract The contract object which holds the 
+     * credit-item-per-day property thats relevant for credit-item-calculation
+     *  
+     * @return float $creditItem The credit item for selected share period
+    */
+    public function calculateCreditItem($contract) {
+
+        $this->validate();
+
+        if (empty($this->errors)) {
+
+            $start_date = new DateTime($this->start_date);
+            $end_date = new DateTime($this->end_date);
+
+            $interval = $end_date->diff($start_date);
+            $amount_days = floatval($interval->format('%a'));
+
+            $this->credit_item = $amount_days * $contract->credit_item_per_day;
+            $this->amount_days = $amount_days;
+
+            return true;
+
+        } else {
+
+            return false;
+        }
+    }
 
     /**
      * Add the share model with the current property values
@@ -64,18 +94,20 @@ class Share extends \Core\Model
 
         $this->validate();
 
+        if (! isset($this->agb_check)) {
+            $this->errors[] = 'Bitte akzeptieren Sie die AGBs';
+        }
+
         if (empty($this->errors)) {
 
             $this->formatCurrentDatesIntoISO8601();
     
-            
             $shares = Share::getAllByContractID($this->contract_id);
             $shareIDs = $this->getIncludedShareIDs($shares);
 
             if (!empty($shareIDs)) {
                 $this->removeByIDs($shareIDs);
             }
-
 
             $sql = 'INSERT INTO share ( start_date, 
                                         end_date,
@@ -93,25 +125,9 @@ class Share extends \Core\Model
     
             return $stmt->execute();
 
- 
-
-            /* $existingShares = $this->getByParkingID($id);
-
-            $this->amount_days = $this->calculateAmountDays();
-
-            $this->credit_item = $this->amount_days * Config::CREDIT_ITEM_PER_DAY_RATE;
-
-            if($existingShares) 
-            {
-                $shareIDs = $this->getIncludedShareIDs($existingShares);
-
-                $this->removeByIDs($shareIDs);
-            } */
-
         } else {
 
             return false;
-
         }
     }
 
@@ -127,7 +143,7 @@ class Share extends \Core\Model
         $this->validateStartDate();
 
         $this->validateEndDate();
-      
+
     }
 
     /**
@@ -275,8 +291,8 @@ class Share extends \Core\Model
     protected function dateExists($share_date)
     {
         $shares = Share::getAllByContractID($this->contract_id);
-        $sharePeriods = $this->getSharePeriodsFromDateTimeObjects($shares);
-        $sharePeriodDates = $this->getDatesFromSharePeriods($sharePeriods);
+        $sharePeriods = $this->getDatesPeriodsFromDateTimes($shares);
+        $sharePeriodDates = $this->getDatesFromDatePeriods($sharePeriods);
 
         $share_date = new DateTime($share_date);
         $needle = $share_date->format(DateTime::ISO8601);
@@ -334,7 +350,7 @@ class Share extends \Core\Model
     * 
     * @return mixed $periods An collection of DatePeriod objects
     */
-    protected function getSharePeriodsFromDateTimeObjects($shareObjects) {
+    protected function getDatesPeriodsFromDateTimes($shareObjects) {
 
         $periods = [];
 
@@ -372,7 +388,7 @@ class Share extends \Core\Model
     * 
     * @return array $dates An collection Ymd-formatted string dates
     */
-    protected function getDatesFromSharePeriods($sharePeriods) 
+    protected function getDatesFromDatePeriods($sharePeriods) 
     {
         $dates = [];
 

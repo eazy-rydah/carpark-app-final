@@ -5,18 +5,22 @@
 {% block body %}
 
     <h1>Parkplatzfreigabe</h1>
-    <p>Hier können Sie ihren Parkplatz freigeben.</p>
-
+ 
     {% if share.errors is not empty %}
+
         <p>Fehlermeldungen:</p>
         <ul>
             {% for error in share.errors %}
                 <li>{{ error }}</li>
             {% endfor %}
         </ul>
+        <hr>  
     {% endif %}
 
-    <form method="post" action="/parking/{{contract.id}}/create-share" id="formParkingShareNew">
+
+   
+    
+    <form method="post" action="/parking/{{contract.id}}/calculate-share" id="formParkingCalculateShare">
 
         <div class="form-group">
             <label for="inputStartDate">Startdatum</label>
@@ -25,21 +29,47 @@
 
         <div class="form-group">
             <label for="inputEndDate">Enddatum</label>
-            <input type="text" id="inputEndDate" name="end_date" placeholder="Enddate" value="{{ share.end_date }}" class="form-control">
+            <input type="text" id="inputEndDate" name="end_date" placeholder="Enddatum" value="{{ share.end_date }}" class="form-control">
         </div>
 
         <input type="hidden" name="contract_id" value="{{contract.id}}">
 
         <div class="form-group">
-            <input type="submit" value="Eingaben bestätigen" class=" btn btn-success">
+            <input type="submit" value="Gutschrift berechnen" class=" btn btn-success">
         </div>
-        <a href="/parking/show">Zurück</a>
+    </form>
+    {% if share.credit_item %}  
+
+
+    <hr>
+    <h5>Für den ausgewählten Zeitraum von {{share.amount_days}} Tagen werden Ihnen  {{share.credit_item}} € gutgeschrieben.</h5>
+ 
+
+
+    <form method="post" action="/parking/{{contract.id}}/confirm-share" id="formParkingCreateShare">
+
+        <input type="hidden" name="contract_id" value="{{contract.id}}">
+        <input type="hidden" name="start_date" value="{{ share.start_date }}">
+        <input type="hidden" name="end_date" value="{{ share.end_date }}">
+        <input type="hidden" name="amount_days" value="{{ share.amount_days }}">
+        <input type="hidden" name="credit_item" value="{{ share.credit_item }}">
+       
+        <div class="form-group">
+            <input type="submit" value="Fortfahren" class=" btn btn-warning">
+        </div>
 
     </form>
+    <hr>
+    {% endif%}
+    <a href="/parking/show">Zurück</a>
+   
 
+
+
+  
     {% if shares %}
         <hr>
-        <h3>Erfolgt</h3>
+        <h4>Freigaben</h4>
         <table class="table table-striped">
 
             <thead>
