@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Parkplatz{% endblock %}
+
+{% block body %}
+
+    <h1>Parkplatz</h1>
+  
+    {% if contracts %}
+        <p>Wählen Sie ihren Parkplatz zur Freigabe aus.</p>
+        <table class="table table-striped">
+
+            <thead>
+                <tr>
+                <th scope="col">Parkhaus</th>
+                <th scope="col">Adresse</th>
+                <th scope="col">Status</th>
+                <th scope="col">Funktionen</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for contract in contracts %}
+    
+                  <tr>
+                    <td>
+                        {% for carpark in carparks %}
+                            {% if carpark.id == contract.carpark_id %}
+                                {{carpark.name}}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for carpark in carparks %}
+                            {% if carpark.id == contract.carpark_id %}
+                                {{carpark.street}}  {{carpark.street_number}}, {{carpark.zip_code}} {{carpark.place}}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{% if contract.is_blocked == 1 %}
+                        Blockiert
+                    {% else %}
+                        Aktiv
+                    {% endif %}</td>
+                    <td>
+                     
+                        <a href="/parking/{{contract.id}}/share">Freigeben</a> | 
+                        <a href="/parking/show-details/{{contract.id}}">Details</a> 
+                    
+                    </td>
+                  </tr>
+             
+                {% endfor %}
+            
+            </tbody>
+
+        </table>
+
+    {% else %}
+
+        <p>Sie haben Ihrem Nutzerkonto noch keinen Parkplatz hinzugefügt.</p>
+        <a href="/parkingrequest/show" class="btn btn-success">Jetzt Parkplatz hinzufügen</a>
+
+    {% endif %}
+
+{% endblock %}

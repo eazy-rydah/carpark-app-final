@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Parkplatzfreigabe{% endblock %}
+
+{% block body %}
+
+    <h1>Parkplatzfreigabe</h1>
+    <p>Hier können Sie ihren Parkplatz freigeben.</p>
+
+    {% if share.errors is not empty %}
+        <p>Fehlermeldungen:</p>
+        <ul>
+            {% for error in share.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post" action="/parking/{{contract.id}}/create-share" id="formParkingShareNew">
+
+        <div class="form-group">
+            <label for="inputStartDate">Startdatum</label>
+            <input type="text" id="inputStartDate" name="start_date"  placeholder="Startdatum" value="{{ share.start_date }}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="inputEndDate">Enddatum</label>
+            <input type="text" id="inputEndDate" name="end_date" placeholder="Enddate" value="{{ share.end_date }}" class="form-control">
+        </div>
+
+        <input type="hidden" name="contract_id" value="{{contract.id}}">
+
+        <div class="form-group">
+            <input type="submit" value="Eingaben bestätigen" class=" btn btn-success">
+        </div>
+        <a href="/parking/show">Zurück</a>
+
+    </form>
+
+    {% if shares %}
+        <hr>
+        <h3>Erfolgt</h3>
+        <table class="table table-striped">
+
+            <thead>
+                <tr>
+                <th scope="col">Startdatum</th>
+                <th scope="col">Enddatum</th>
+                <th scope="col">Gutschrift</th>
+                <th scope="col">Funktionen</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for share in shares %}
+    
+                  <tr>
+                    <td>{{share.start_date}}</td>
+                    <td>{{share.end_date}}</td>
+                    <td>Betrag X in €</td>
+                    <td>
+                        {% if share.is_active %}
+                            Aktiv
+                        {% else %}
+                            <a href="#">/parking/cancel-share/{{share.id}}</a>
+                        {% endif %}
+                    </td>
+
+                    </td>
+                  </tr>
+             
+                {% endfor %}
+            
+            </tbody>
+
+        </table>
+
+    {% endif %}
+
+{% endblock %}

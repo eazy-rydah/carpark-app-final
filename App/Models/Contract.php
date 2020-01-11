@@ -318,6 +318,29 @@ class Contract extends ContractRequest
 
         return false;
     }
+
+    /**
+     * Find all contracts by User id
+     * 
+     * @param integer $id The user id
+     * 
+     * @return mixed Contract object if found, false otherwise
+     */  
+    public static function findAllByUserID($id)
+    {
+        $sql = 'SELECT * FROM contract WHERE client_id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        // fetch object with dynamic namespace, instead of array
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        
+        $stmt->execute();
+
+        return $stmt->fetchAll(); 
+    }
 }
 
 

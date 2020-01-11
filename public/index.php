@@ -40,5 +40,6 @@ $router->add('password/show-reset/{token:[\da-f]+}', ['controller' => 'Password'
 $router->add('signup/activate/{token:[\da-f]+}', ['controller' => 'Signup', 'action' => 'activate']);
 $router->add('{controller}/{action}');
 $router->add('{controller}/{action}/{id:\d+}');
+$router->add('{controller}/{id:\d+}/{action}');
     
 $router->dispatch($_SERVER['QUERY_STRING']);

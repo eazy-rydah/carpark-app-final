@@ -5,7 +5,7 @@
 {% block body %}
 
     <h1>Parkplatz Anfrage</h1>
-    <p>Fügen Sie ihren Parkplatz über Angabe der Vertragsdaten Ihrem Nutzerkonto hinzu.</p>
+    <p>Fügen Sie Ihren Parkplatz über Angabe der Vertragsdaten Ihrem Nutzerkonto hinzu.</p>
 
     {% if request.errors is not empty %}
         <p>Fehlermeldungen:</p>
@@ -35,12 +35,13 @@
 
     </form>
 
-    <hr>
+  
 
-    <h2>Gestellt</h2>
+ 
 
     {% if requests %}
-
+        <hr>
+        <h2>Gestellt</h2>
         <table class="table table-striped">
 
             <thead>
@@ -62,15 +63,15 @@
                     <td>{{request.rfid_id}}</td>
                     <td>{{request.created_at | date("d.m.Y")}}</td>
                     <td>
-                        {% if request.is_confirmed == 1 %}
+                        {% if request.related_contract %}
                             Bestätigt
                         {% else %}
                             Ausstehend
                         {% endif %}
                     </td>
                     <td>
-                        {% if request.is_confirmed == 1 %}
-                            <a href="/parking/show/{{contract.id}}">Zum Vertrag</a>
+                        {% if request.related_contract %}
+                            <a href="/parking/show-details/{{request.related_contract}}">Zum Parkplatz</a>
                         {% else %}
                             <a href="/parkingrequest/delete/{{request.id}}">Zurückziehen</a>
                         {% endif %}
@@ -82,10 +83,6 @@
             </tbody>
 
         </table>
-
-    {% else %}
-
-        <p>Keine ausstehenden Anfragen.</p>
 
     {% endif %}
 

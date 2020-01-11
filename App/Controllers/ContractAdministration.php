@@ -227,7 +227,6 @@ class ContractAdministration extends EmployeeAuth
         } else {
 
             $this->redirect('/contractadministration/edit/' . $contract->contract_id);
-
         }
     }  
 }
