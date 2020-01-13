@@ -6,6 +6,8 @@
 
     <h1>Parkplatzfreigabe</h1>
 
+    <p>Prüfen Sie Ihre Angaben und bestätigen Sie die Parkplatzfreigabe.</p>
+
     
     {% if share.errors is not empty %}
 
@@ -16,9 +18,8 @@
             {% endfor %}
         </ul>
     {% endif %}
-        <hr>
-    <form method="post" action="/parking/{{contract.id}}/create-share" id="formParkingShareNew">
 
+    <form method="post" action="/parking/{{contract.id}}/create-share" id="formParkingShareNew">
         {% for carpark in carparks %}
     
         {% if contract.carpark_id == carpark.id %}

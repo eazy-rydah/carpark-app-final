@@ -10,8 +10,27 @@ use DateTime;
  *
  * PHP version 7.0
  */
-class Role extends \Core\Model
+class EmployeeRole extends \Core\Model
 {
+
+   
+    /**
+     * Employee admin role
+     * @var int
+     */
+    const ROLE_ADMIN = 1;
+
+    /**
+     * Employee customer service role
+     * @var int
+     */
+    const ROLE_CUSTOMER_SERVICE = 2;
+
+    /**
+     * Employee customer service role
+     * @var int
+     */
+    const ROLE_CARPARK = 3;
 
     /**
      * get all role data 
@@ -20,7 +39,7 @@ class Role extends \Core\Model
      */  
     public static function getAll()
     {
-        $sql = 'SELECT * FROM role';
+        $sql = 'SELECT * FROM employee_role';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);

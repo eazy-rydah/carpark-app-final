@@ -100,15 +100,11 @@ class Share extends \Core\Model
 
         if (empty($this->errors)) {
 
-            $this->formatCurrentDatesIntoISO8601();
+            $this->formatDatesIntoISO8601String();
     
             $shares = Share::getAllByContractID($this->contract_id);
-            $shareIDs = $this->getIncludedShareIDs($shares);
-
-            if (!empty($shareIDs)) {
-                $this->removeByIDs($shareIDs);
-            }
-
+            $this->removeSurroundedShares($shares);
+           
             $sql = 'INSERT INTO share ( start_date, 
                                         end_date,
                                         contract_id) 
@@ -308,20 +304,6 @@ class Share extends \Core\Model
     }
 
     /**
-     * Format current share dates into ISO8601 date strings
-     * 
-     * @return void
-    */
-    protected function formatCurrentDatesIntoISO8601() {
-
-        $this->start_date = new DateTime($this->start_date);
-        $this->start_date = $this->start_date->format(DateTime::ISO8601);
-        $this->end_date = new DateTime($this->end_date);
-        $this->end_date = $this->end_date->format(DateTime::ISO8601);
-
-    }
-
-    /**
     * Find all contract related shares
     * 
     * @param string $id The contract ID
@@ -402,38 +384,39 @@ class Share extends \Core\Model
         return $dates;
     }
 
+      /**
+     * Format current share dates into ISO8601 date strings
+     * 
+     * @return void
+    */
+    protected function formatDatesIntoISO8601String() {
+
+        $this->start_date = new DateTime($this->start_date);
+        $this->start_date = $this->start_date->format(DateTime::ISO8601);
+        $this->end_date = new DateTime($this->end_date);
+        $this->end_date = $this->end_date->format(DateTime::ISO8601);
+
+    }
+
     /**
-    * Remove shares by IDs
-    * 
-    * @param string $ids The share IDs
+    * Remove all existing shares in db, which exist in between current start and
+    * end date
     * 
     * @return boolean true if removing successfull, false otherwise
-     */
-    private function removeByIDs($ids) {
+    *
+    */
+    protected function removeSurroundedShares($shares)
+    {
+        $shareIDs = $this->getIncludedShareIDs($shares);
 
-        if (!empty($ids)) {
+       // $shares = $this->getIncludedShares($shares);
 
-            $sql = 'DELETE FROM share WHERE id IN (';
+       // var_dump($shares); exit;
 
-            $values = [];
-
-            foreach ($ids as $id) {
-                $values[] = "{$id},";
-            }
-
-            $sql .= implode(" ", $values);
-
-            // Removelast character from statement if it is ","
-            $sql = rtrim($sql, ",");
-
-            // Add closing bracket to complete sql statement
-            $sql .= ")";
-
-            $db = static::getDB();
-            $stmt = $db->prepare($sql);
-
-            return $stmt->execute(); 
+        if (!empty($shareIDs)) {
+            $this->removeByIDs($shareIDs);
         }
+
     }
 
    /**
@@ -465,6 +448,36 @@ class Share extends \Core\Model
         return $includesdShareIDs;
     }
 
+    /**
+    * Remove shares by IDs
+    * 
+    * @param string $ids The share IDs
+    * 
+    * @return boolean true if removing successfull, false otherwise
+     */
+    protected function removeByIDs($ids) {
+
+        $sql = 'DELETE FROM share WHERE id IN (';
+
+        $values = [];
+
+        foreach ($ids as $id) {
+            $values[] = "{$id},";
+        }
+
+        $sql .= implode(" ", $values);
+
+        // Removelast character from statement if it is ","
+        $sql = rtrim($sql, ",");
+
+        // Add closing bracket to complete sql statement
+        $sql .= ")";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        return $stmt->execute(); 
+    }
 
     /**
      * Cuts off time and timezone information from ISO8601 formatted date array
@@ -524,232 +537,5 @@ class Share extends \Core\Model
         return $stmt->execute(); 
 
     }
-
-  
-
-/* -------------------------------------------------AB BHIER NUTZE ICH BOCH KEINE VON DEN MEHTODEN----------------------------------------- */
-
-
- // create timeperiod from each
-
- /* $sharePeriods = [];
-
- foreach ($shares as $share) {
-     $sharePeriods[] = $this->createDatePeriod($share->start_date, $share->end_date);
- }
- */
- 
-
-
-
-/* 
-
-
-      
-
-        $existingShareDates = $this->getDatesFromMultipleShares($shares);
-
-        var_dump($existingShareDates); exit;
-
-        // check if start date already exists in database 
-        // check if end date already exists in database
-
-       
-
-
-
-
-    
-        /* $existingShares = $this->getByContractID($id);
-
-        
-
-        if ($this->share_start != '') {
-    
-            // Check if startdate already exist in shareperiod of one share in db
-            if ($existingShares) {
-                // var_dump($existingShares);
-                $existingShareDates = $this->getDatesFromMultipleShares($existingShares);
-                
-                $needle = $this->start_date->format(DateTime::ISO8601);
-                $haystack = $existingShareDates;
-              
-                if(in_array($needle, $haystack)) {
-                    $this->errors[] = 'share start date already exists';
-                }
-            }
-        } 
-
-        // SHARE END DATE VALIDATION
-        if ($this->share_end == '') {
-            $this->errors[] = 'share end date is required';
-        }
-
-        if ($this->share_end != '') {
-
-            // Checks that only work if both dates are set
-            if ($this->share_start != '') {
-            
-                $min_end_date = $this->start_date->modify('+6 days');
-
-                if ($this->end_date < $min_end_date) {
-
-                    $this->errors[] = 'earliest share end date is six days from share start';
-
-                }         
-
-                // Check if startdate already exist in shareperiod of one share in db
-                if ($existingShares) {
-
-                    $existingShareDates = $this->getDatesFromMultipleShares($existingShares);
-
-                    $needle = $this->end_date->format(DateTime::ISO8601);
-                    $haystack = $existingShareDates;
-                
-                    if(in_array($needle, $haystack)) {
-                        $this->errors[] = 'share end date already exists';
-                    }
-                }
-            }
-        }  */
-
-
-
-    /**
-    * Get all Dates from multiple share objects
-    * 
-    * @param Shares $shares Share objects to get dates from
-    * 
-    * @return mixed $dates array with ISO8601 formatted dates
-    */
-    protected function getDatesFromMultipleShares($shares)
-    {
-
-        $sharePeriods = [];
-
-        foreach ($shares as $share) {
-            $sharePeriods[] = $this->createDatePeriod($share->start_date, $share->end_date);
-        }
-
-        $dates = [];
-
-        foreach ($sharePeriods as $daterange) {
-            foreach ($daterange as $date) {
-                $dates[] = $date->format(DateTime::ISO8601);
-            }
-        }
-
-        return $dates;   
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*            $shares = Share::getAllByContractID($this->contract_id);
-                
-                if ($shares) {
-
-                    $shareDates = $this->getDatesFromMultipleShares($shares);
-                    $this->start_date = new DateTime($this->start_date);
-                    $needle = $this->start_date->format(DateTime::ISO8601);
-                    $haystack = $shareDates;
-                
-                    if(in_array($needle, $haystack)) {
-                        $this->errors[] = 'share start date already exists';
-                    }
-                } */
-
-
-
-
-
-
-
-
-
-
-
-
-
-   /**
-     * Calculate the share length in days from the difference of share start and end
-     * 
-     * @return integer $days The amount of days between share start and end
-    */
-    private function calculateAmountDays() {
-
-        $start_date = new DateTime($this->share_start);
-        $end_date = new DateTime($this->share_end);
-        $end_date->modify("+1day");
-
-        $difference = $start_date->diff($end_date);
-
-        $days = $difference->days;
-
-        return $days;
-    }
-
- 
-
- 
-
-
-    /**
-    * Get Dates from DatePeriod object in ISO8601 format
-    * 
-    * @param DatePeriod $dateperiod The Dateperiod object
-    * 
-    * @return array $dates ISO8601 formatted dates as strings
-    */
-    private function getDatesFromDatePeriod($dateperiod) {
-
-        $dates = [];
-
-        foreach ($dateperiod as $date) {
-
-            $dates[] = $date->format(DateTime::ISO8601);
-
-        }
-
-        return $dates;
-    }
-
-
-
-    /**
-    * Find single share by ID
-    * 
-    * @param string $id The share ID
-    * 
-    * @return mixed Share object if found, false otherwise
-    */
-    public static function findByID($id) {
-
-        $sql = 'SELECT * FROM shares WHERE id = :id';
-
-        $db = static::getDB();
-        $stmt = $db->prepare($sql);
-
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-
-        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
-
-        $stmt->execute();
-
-        return $stmt->fetch(); 
-    }
-
-
-
-  
 }
     

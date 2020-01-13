@@ -3,9 +3,7 @@
 namespace App\Controllers;
 
 use \Core\View;
-// use \App\AuthMethod;
 use \App\FlashMessage;
-//use \App\Config;
 use \App\Models\ContractRequest;
 
 /**

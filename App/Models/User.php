@@ -141,7 +141,6 @@ class User extends \Core\Model
        return false;
     }
 
-
     /**
      * Find a user model by email address
      * 

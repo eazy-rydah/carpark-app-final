@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 use \App\Models\User;
 use \Core\View;
-use \App\Models\Role;
 use \App\Models\Employee;
+use \App\Models\EmployeeRole;
 use \App\FlashMessage;
 
 /**
@@ -25,7 +25,7 @@ class EmployeeAdministration extends AdminAuth
     {
 
         $employees = User::getAllByType('employee');
-        $roles = Role::getAll();
+        $roles = EmployeeRole::getAll();
         
         View::renderTemplate('employeeadministration/all.html', [
             'employees' => $employees,
@@ -42,7 +42,7 @@ class EmployeeAdministration extends AdminAuth
     public function showSignupAction()
     {
 
-        $roles = Role::getAll();
+        $roles = EmployeeRole::getAll();
 
         View::renderTemplate('employeeadministration/signup.html', [
             'roles' => $roles
@@ -70,7 +70,7 @@ class EmployeeAdministration extends AdminAuth
     
         } else {
 
-            $roles = Role::getAll();
+            $roles = EmployeeRole::getAll();
 
             View::renderTemplate('employeeadministration/signup.html', [
                'employee' => $employee,
