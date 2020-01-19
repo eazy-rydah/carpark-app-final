@@ -448,28 +448,6 @@ class User extends \Core\Model
     }
 
     /**
-     * Get all users by type
-     * 
-     * @return mixed User object if found, false otherwise
-     */  
-    public static function getAllByType($type)
-    {
-        $sql = 'SELECT * FROM user WHERE type = :type';
-
-        $db = static::getDB();
-        $stmt = $db->prepare($sql);
-
-        $stmt->bindValue(':type', $type, PDO::PARAM_STR);
-
-        // fetch object with dynamic namespace, instead of array
-        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
-        
-        $stmt->execute();
-
-        return $stmt->fetchAll(); 
-    }
-
-    /**
      * Delete a user model by ID
      * 
      * @param string $id The user ID
