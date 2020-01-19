@@ -25,7 +25,7 @@
                 {% for contract in contracts %}
     
                   <tr>
-                    <td>{{contract.id}}</td>
+                    <td>{{contract.contract_id}}</td>
                     <td>{{contract.rfid_id}}</td>
                     <td>{{request.created_at | date("d.m.Y")}}</td>
                     <td>{% if contract.is_blocked == 1 %}
@@ -35,7 +35,7 @@
                     {% endif %}</td>
                     <td>
                      
-                    <a href="/contractadministration/edit/{{contract.id}}">Bearbeiten</a> 
+                    <a href="/contractadministration/edit/{{contract.contract_id}}">Bearbeiten</a> 
                     
                     </td>
                   </tr>

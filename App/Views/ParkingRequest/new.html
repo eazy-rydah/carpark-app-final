@@ -20,14 +20,14 @@
 
         <div class="form-group">
             <label for="inputContractId">Vertragsnummer</label>
-            <input type="number" id="inputContractId" name="contract_id"  placeholder="Vertragsnummer" value="{{ request.contract_id }}" class="form-control">
+            <input type="number" id="inputContractId" name="contract_auth"  placeholder="Vertragsnummer" value="{{ request.contract_auth }}" class="form-control">
         </div>
 
         <div class="form-group">
             <label for="InputRfidId">RFID-Schlüssel-Nummer</label>
-            <input type="number" id="InputRfidId" name="rfid_id" placeholder="RFID-Schlüssel-Nummer" value="{{ request.rfid_id}}" class="form-control">
+            <input type="number" id="InputRfidId" name="rfid_auth" placeholder="RFID-Schlüssel-Nummer" value="{{ request.rfid_auth}}" class="form-control">
         </div>
-
+        <input type="hidden" name="user_id" value= "{{user_id}}">
         <div class="form-group">
             <input type="submit" value="Eingaben bestätigen" class=" btn btn-success">
         </div>
@@ -59,21 +59,21 @@
                 {% for request in requests %}
     
                   <tr>
-                    <td>{{request.contract_id}}</td>
-                    <td>{{request.rfid_id}}</td>
+                    <td>{{request.contract_auth}}</td>
+                    <td>{{request.rfid_auth}}</td>
                     <td>{{request.created_at | date("d.m.Y")}}</td>
                     <td>
-                        {% if request.related_contract %}
+                        {% if request.contract_id %}
                             Bestätigt
                         {% else %}
                             Ausstehend
                         {% endif %}
                     </td>
                     <td>
-                        {% if request.related_contract %}
-                            <a href="/parking/show-details/{{request.related_contract}}">Zum Parkplatz</a>
+                        {% if request.contract_id %}
+                            <a href="/parking/show-details/{{request.contract_id}}">Zum Parkplatz</a>
                         {% else %}
-                            <a href="/parkingrequest/delete/{{request.id}}">Zurückziehen</a>
+                            <a href="/parkingrequest/delete/{{request.contract_request_id}}">Zurückziehen</a>
                         {% endif %}
                     </td>
                   </tr>

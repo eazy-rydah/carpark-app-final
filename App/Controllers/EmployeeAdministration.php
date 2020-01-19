@@ -5,7 +5,7 @@ namespace App\Controllers;
 use \App\Models\User;
 use \Core\View;
 use \App\Models\Employee;
-use \App\Models\EmployeeRole;
+use \App\Models\UserRole;
 use \App\FlashMessage;
 
 /**
@@ -23,10 +23,9 @@ class EmployeeAdministration extends AdminAuth
      */  
     public function showAction()
     {
+        $employees = Employee::getAll();
+        $roles = UserRole::getAllEmployeeRoles();
 
-        $employees = User::getAllByType('employee');
-        $roles = EmployeeRole::getAll();
-        
         View::renderTemplate('employeeadministration/all.html', [
             'employees' => $employees,
             'roles' => $roles
@@ -42,7 +41,7 @@ class EmployeeAdministration extends AdminAuth
     public function showSignupAction()
     {
 
-        $roles = EmployeeRole::getAll();
+        $roles = UserRole::getAllEmployeeRoles();
 
         View::renderTemplate('employeeadministration/signup.html', [
             'roles' => $roles
@@ -70,7 +69,7 @@ class EmployeeAdministration extends AdminAuth
     
         } else {
 
-            $roles = EmployeeRole::getAll();
+            $roles = UserRole::getAllEmployeeRoles();
 
             View::renderTemplate('employeeadministration/signup.html', [
                'employee' => $employee,
@@ -90,7 +89,7 @@ class EmployeeAdministration extends AdminAuth
 
         $employee = User::findByID($employeeId);
 
-        if ($employee->id != $_SESSION['user_id']) {
+        if ($employee->user_id != $_SESSION['user_id']) {
 
             FlashMessage::add('Mitarbeiter gelöscht', FlashMessage::INFO);
 

@@ -47,32 +47,32 @@ class Contract extends ContractRequest
     {
         $this->validate();
 
+        //var_dump($this); exit;
+
         if (empty($this->errors)) {
 
             $sql = 'INSERT INTO contract (
-                                id,  
+                                contract_id,  
                                 carpark_id,
-                                client_id,
+                                user_id,
                                 rfid_id,
                                 credit_item_per_day)
                     VALUES (
-                        :id,
+                        :contract_id,
                         :carpark_id,
-                        :client_id,
+                        :user_id,
                         :rfid_id,
                         :credit_item_per_day
                     )';
 
-            
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue(':id', $this->contract_id, PDO::PARAM_INT);
+            $stmt->bindValue(':contract_id', $this->contract_id, PDO::PARAM_INT);
             $stmt->bindValue(':carpark_id', $this->carpark_id, PDO::PARAM_INT);
-            $stmt->bindValue(':client_id', $this->client_id, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
             $stmt->bindValue(':rfid_id', $this->rfid_id, PDO::PARAM_INT);
-            $stmt->bindValue(
-                            ':credit_item_per_day',
+            $stmt->bindValue(':credit_item_per_day',
                             strval($this->credit_item_per_day),
                             PDO::PARAM_STR);
 
@@ -94,7 +94,21 @@ class Contract extends ContractRequest
     public function validate()
     {
    
-        parent::validate();
+        if ($this->contract_id == '') {
+            $this->errors[] = 'Vertragsnummer angeben';
+        }
+
+        if (strlen($this->contract_id) != 6) {
+                $this->errors[] = 'Vertragsnummer muss 6 Stellen enthalten';
+        }
+
+        if ($this->rfid_id == '') {
+            $this->errors[] = 'RFID-Schlüssel-Nummer angeben';
+        }
+
+        if (strlen($this->rfid_id) != 6) {
+            $this->errors[] = 'RFID-Schlüsselnummer muss 6 Stellen enthalten';
+        }
 
         if (! isset($this->contract_ignore_id)) {
 
@@ -148,7 +162,7 @@ class Contract extends ContractRequest
      */  
     public static function findByID($id)
     {
-        $sql = 'SELECT * FROM contract WHERE id = :id';
+        $sql = 'SELECT * FROM contract WHERE contract_id = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -169,8 +183,8 @@ class Contract extends ContractRequest
     */  
     public function update()
     {
-        if (static::contractExists($this->id)) {
-            $this->contract_ignore_id = $this->id;
+        if (static::contractExists($this->contract_id)) {
+            $this->contract_ignore_id = $this->contract_id;
         }
 
         if (static::rfidExists($this->rfid_id)) {
@@ -185,7 +199,7 @@ class Contract extends ContractRequest
                     SET rfid_id = :rfid_id,
                         carpark_id = :carpark_id,
                         credit_item_per_day = :credit_item_per_day
-                    WHERE id = :id';
+                    WHERE contract_id = :id';
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -193,7 +207,7 @@ class Contract extends ContractRequest
             $stmt->bindValue(':rfid_id', $this->rfid_id, PDO::PARAM_INT);
             $stmt->bindValue(':carpark_id', $this->carpark_id, PDO::PARAM_INT);
             $stmt->bindValue(':credit_item_per_day', $this->credit_item_per_day, PDO::PARAM_STR);
-            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindValue(':id', $this->contract_id, PDO::PARAM_INT);
 
             return $stmt->execute();
         }
@@ -211,12 +225,12 @@ class Contract extends ContractRequest
 
         $sql = 'UPDATE contract
                 SET is_blocked = 1
-                WHERE id = :contract_id';
+                WHERE contract_id = :contract_id';
      
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
-        $stmt->bindValue(':contract_id', $this->id, PDO::PARAM_INT);
+        $stmt->bindValue(':contract_id', $this->contract_id, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
@@ -231,12 +245,12 @@ class Contract extends ContractRequest
 
         $sql = 'UPDATE contract
                 SET is_blocked = NULL
-                WHERE id = :contract_id';
+                WHERE contract_id = :contract_id';
      
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
-        $stmt->bindValue(':contract_id', $this->id, PDO::PARAM_INT);
+        $stmt->bindValue(':contract_id', $this->contract_id, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
@@ -248,12 +262,12 @@ class Contract extends ContractRequest
     */
     public function delete() {
 
-        $sql = 'DELETE FROM contract WHERE id = :id';
+        $sql = 'DELETE FROM contract WHERE contract_id = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
-        $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $this->contract_id, PDO::PARAM_INT);
 
         return $stmt->execute(); 
     }
@@ -328,7 +342,7 @@ class Contract extends ContractRequest
      */  
     public static function findAllByUserID($id)
     {
-        $sql = 'SELECT * FROM contract WHERE client_id = :id';
+        $sql = 'SELECT * FROM contract WHERE user_id = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);

@@ -24,7 +24,7 @@ class AuthMethod {
         // session fixation attacks due cross-site-scripting
         session_regenerate_id(true);
 
-        $_SESSION['user_id'] = $user->id;
+        $_SESSION['user_id'] = $user->user_id;
     }
 
     /**

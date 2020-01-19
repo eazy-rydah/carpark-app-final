@@ -24,14 +24,14 @@
                 {% for request in requests %}
     
                   <tr>
-                    <td>{{request.contract_id}}</td>
-                    <td>{{request.rfid_id}}</td>
+                    <td>{{request.contract_auth}}</td>
+                    <td>{{request.rfid_auth}}</td>
                     <td>{{request.created_at | date("d.m.Y")}}</td>
                     <td>
-                        {% if request.related_contract %}
-                        <a href="/contractadministration/edit/{{request.related_contract}}">Zum Vertrag</a> 
+                        {% if request.contract_id %}
+                        <a href="/contractadministration/edit/{{request.contract_id}}">Zum Vertrag</a> 
                         {% else %}
-                            <a href="/requestadministration/show-details/{{request.id}}">Details einsehen</a> 
+                            <a href="/requestadministration/show-details/{{request.contract_request_id}}">Details einsehen</a> 
                         {% endif %}
                     </td>
                   </tr>

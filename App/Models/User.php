@@ -55,8 +55,10 @@ class User extends \Core\Model
             $hashed_token = $token->getHash();
             $this->activation_token = $token->getValue();
 
-            $sql = 'INSERT INTO user (first_name, last_name, email ,password_hash,          type, activation_hash)
-                    VALUES (:first_name, :last_name, :email, :password_hash, :type, :activation_hash)';
+           /*  $sql = 'INSERT INTO user (first_name, last_name, email ,password_hash,          type, activation_hash)
+                    VALUES (:first_name, :last_name, :email, :password_hash, :type :activation_hash)'; */
+            $sql = 'INSERT INTO user (first_name, last_name, email ,password_hash,          user_role_id, activation_hash)
+            VALUES (:first_name, :last_name, :email, :password_hash, :user_role_id, :activation_hash)';
     
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -64,7 +66,7 @@ class User extends \Core\Model
             $stmt->bindValue(':first_name', $this->first_name, PDO::PARAM_STR);
             $stmt->bindValue(':last_name', $this->last_name, PDO::PARAM_STR);$stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
             $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
-            $stmt->bindValue(':type', $this->type, PDO::PARAM_STR);
+            $stmt->bindValue(':user_role_id', $this->user_role_id, PDO::PARAM_INT);
             $stmt->bindValue(':activation_hash', $hashed_token, PDO::PARAM_STR);
     
             return $stmt->execute();
@@ -94,7 +96,7 @@ class User extends \Core\Model
         if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
             $this->errors[] = 'E-Mail-Adresse ist ungültig';
         }
-        if (static::emailExists($this->email, $this->id ?? null)) {
+        if (static::emailExists($this->email, $this->user_id ?? null)) {
             $this->errors[] = 'E-Mail-Adresse ist bereits vergeben';
         }
 
@@ -133,7 +135,7 @@ class User extends \Core\Model
        $user = static::findByEmail($email);
 
        if ($user) {
-           if ($user->id != $ignore_id) {
+           if ($user->user_id != $ignore_id) {
                return true;
            }
        }
@@ -194,7 +196,7 @@ class User extends \Core\Model
      */  
     public static function findByID($id)
     {
-        $sql = 'SELECT * FROM user WHERE id = :id';
+        $sql = 'SELECT * FROM user WHERE user_id = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -245,14 +247,14 @@ class User extends \Core\Model
         $sql = 'UPDATE user
                 SET password_reset_hash = :token_hash,
                     password_reset_expires_at = :expires_at
-                WHERE id= :id';
+                WHERE user_id= :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
         $stmt->bindValue(':token_hash', $hashed_token, PDO::PARAM_STR);
         $stmt->bindValue('expires_at', date('Y-m-d H:i:s', $expiry_timestamp), PDO::PARAM_STR);
-        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $this->user_id, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
@@ -332,12 +334,12 @@ class User extends \Core\Model
                     SET password_hash = :password_hash,
                         password_reset_hash = NULL,
                         password_reset_expires_at = NULL
-                    WHERE id = :id';
+                    WHERE user_id = :id';
             
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindValue(':id', $this->user_id, PDO::PARAM_INT);
             $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
 
             return $stmt->execute();
@@ -422,7 +424,7 @@ class User extends \Core\Model
                 $sql .= ', password_hash = :password_hash';
             }
                         
-            $sql .= "\nWHERE id = :id";
+            $sql .= "\nWHERE user_id = :id";
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -430,7 +432,7 @@ class User extends \Core\Model
             $stmt->bindValue(':first_name', $this->first_name, PDO::PARAM_STR);
             $stmt->bindValue(':last_name', $this->last_name, PDO::PARAM_STR);
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
-            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindValue(':id', $this->user_id, PDO::PARAM_INT);
 
             // Add password if it's set
             if (isset($this->password)) {
@@ -476,11 +478,11 @@ class User extends \Core\Model
     */ 
     public function delete()
     {
-        $sql = 'DELETE FROM user WHERE id = :id';
+        $sql = 'DELETE FROM user WHERE user_id = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $this->user_id, PDO::PARAM_INT);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 

@@ -15,7 +15,7 @@ use \App\Models\Client;
  * 
  * PHP version 7.0
  */ 
-class ContractAdministration extends EmployeeAuth
+class ContractAdministration extends EmployeeCustomerServiceAuth
 {
     /**
      * Show the contract request page
@@ -39,7 +39,7 @@ class ContractAdministration extends EmployeeAuth
     public function newAction()
     {
         $contract = new Contract($_POST);
-        $relatedClient = Client::findByID($contract->client_id);
+        $relatedClient = Client::findByID($contract->user_id);
 
         $carparks = Carpark::getAll();
 
@@ -58,11 +58,11 @@ class ContractAdministration extends EmployeeAuth
     public function createAction()
     {
         $contract = new Contract($_POST);
-        $client = Client::findByID($contract->client_id);
+        $client = Client::findByID($contract->user_id);
         
         if ($contract->save()) {
 
-            $relatedRequest = ContractRequest::findByID($contract->request_id);
+            $relatedRequest = ContractRequest::findByID($contract->contract_request_id);
             $relatedRequest->confirmByContractID($contract->contract_id);
 
             $client->sendContractConfirmationEmail($contract);
@@ -92,7 +92,7 @@ class ContractAdministration extends EmployeeAuth
         $id = $this->route_params['id'];
         $contract = Contract::findByID($id);
 
-        $relatedClient = Client::findByID($contract->client_id);
+        $relatedClient = Client::findByID($contract->user_id);
         $carparks = Carpark::getAll();
 
         View::renderTemplate('contractadministration/edit.html', [
@@ -197,7 +197,7 @@ class ContractAdministration extends EmployeeAuth
         $id = $this->route_params['id'];
         $contract= Contract::findByID($id);
 
-        $relatedClient = Client::findByID($contract->client_id);
+        $relatedClient = Client::findByID($contract->user_id);
         $carparks = Carpark::getAll();
 
         View::renderTemplate('contractadministration/delete.html', [

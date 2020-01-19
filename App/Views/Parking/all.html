@@ -26,14 +26,14 @@
                   <tr>
                     <td>
                         {% for carpark in carparks %}
-                            {% if carpark.id == contract.carpark_id %}
+                            {% if carpark.carpark_id == contract.carpark_id %}
                                 {{carpark.name}}
                             {% endif %}
                         {% endfor %}
                     </td>
                     <td>
                         {% for carpark in carparks %}
-                            {% if carpark.id == contract.carpark_id %}
+                            {% if carpark.carpark_id == contract.carpark_id %}
                                 {{carpark.street}}  {{carpark.street_number}}, {{carpark.zip_code}} {{carpark.place}}
                             {% endif %}
                         {% endfor %}
@@ -45,8 +45,8 @@
                     {% endif %}</td>
                     <td>
                      
-                        <a href="/parking/{{contract.id}}/share">Freigeben</a> | 
-                        <a href="/parking/show-details/{{contract.id}}">Details</a> 
+                        <a href="/parking/{{contract.contract_id}}/share">Freigeben</a> | 
+                        <a href="/parking/show-details/{{contract.contract_id}}">Details</a> 
                     
                     </td>
                   </tr>

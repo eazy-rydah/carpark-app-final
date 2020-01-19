@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use \App\AuthMethod;
 use \App\FlashMessage;
+use \App\Models\UserRole;
 
 /**
  * Client base controller
@@ -37,7 +38,7 @@ abstract class ClientAuth extends Authenticated
      */ 
     protected function requireClient()
     {
-        if ($this->user->type != 'client') {
+        if ($this->user->user_role_id != UserRole::ROLE_CLIENT) {
 
             FlashMessage::add('Kundenrolle erforderlich', FlashMessage::INFO);
 

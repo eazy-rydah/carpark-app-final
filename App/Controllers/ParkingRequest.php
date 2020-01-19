@@ -23,8 +23,9 @@ class ParkingRequest extends ClientAuth
     {
         parent::before();
 
-        $this->requests = ContractRequest::findAllByUserID($this->user->id);
+        $this->requests = ContractRequest::findAllByUserID($this->user->user_id);
 
+        // var_dump($this->requests); exit;
     }
   
     /**
@@ -36,7 +37,8 @@ class ParkingRequest extends ClientAuth
     {
 
         View::renderTemplate('parkingrequest/new.html', [
-            'requests' => $this->requests
+            'requests' => $this->requests,
+            'user_id' => $this->user->user_id
         ]);
 
     }
@@ -47,9 +49,8 @@ class ParkingRequest extends ClientAuth
      * @return void
      */
     public function createAction()
-    {
-  
-        $request = new ContractRequest($_POST, $this->user->id);
+    {     
+        $request = new ContractRequest($_POST);
 
         if ($request->save()) {
 
@@ -59,7 +60,8 @@ class ParkingRequest extends ClientAuth
 
             View::renderTemplate('parkingrequest/new.html', [
                 'request' => $request,
-                'requests' => $this->requests
+                'requests' => $this->requests,
+                'user_id' => $this->user->user_id
             ]);
          } 
     }
@@ -81,12 +83,12 @@ class ParkingRequest extends ClientAuth
      */  
     public function deleteAction()
     {
-    
+      
         $request = ContractRequest::findByID($this->route_params['id']);
 
         if ($request) {
 
-            if ($this->user->id == $request->client_id) {
+            if ($this->user->user_id == $request->user_id) {
 
                 FlashMessage::add('Anfrage zurückgezogen', FlashMessage::INFO);
 

@@ -23,29 +23,29 @@
             <input type="email" id="inputEmail" name="email" placeholder="E-mail-Adresse" value="{{ client.email }}" class="form-control" readonly>
         </div>
 
-        <input type="hidden" name="client_id" value="{{client.id}}">
+        <input type="hidden" name="user_id" value="{{client.user_id}}">
 
         <div class="form-group">
             <label for="inputContractId">Vertragsnummer</label>
-            <input type="number" id="inputContractId" name="contract_id" placeholder="Vertragsnummer" value="{{request.contract_id}}" class="form-control" readonly>
+            <input type="number" id="inputContractId" name="contract_id" placeholder="Vertragsnummer" value="{{request.contract_auth}}" class="form-control" readonly>
         </div>
 
         <div class="form-group">
             <label for="inputRfidId">RFID-Schlüsselnummer</label>
-            <input type="number" id="inputRfidId" name="rfid_id" placeholder="RFID-Schlüsselnummer" value="{{request.rfid_id}}" class="form-control" readonly>
+            <input type="number" id="inputRfidId" name="rfid_id" placeholder="RFID-Schlüsselnummer" value="{{request.rfid_auth}}" class="form-control" readonly>
         </div>
 
-        <input type="hidden" name="request_id" value="{{request.id}}">
+        <input type="hidden" name="contract_request_id" value="{{request.contract_request_id}}">
 
         <div class="form-group">
             <input type="submit" value="Vertrag anlegen" class=" btn btn-success">
         </div>
 
         <div class="form-group">
-            <a href="/requestadministration/deny/{{request.id}}" class="btn btn-warning">Ablehnen</a>
+            <a href="/requestadministration/deny/{{request.contract_request_id}}" class="btn btn-warning">Ablehnen</a>
         </div>
 
-        <a href="/requestadministration/show-all" class="btn btn-secondary btn-sm">Zurück</a>
+        <a href="/requestadministration/show" class="btn btn-secondary btn-sm">Zurück</a>
 
     </form>
 

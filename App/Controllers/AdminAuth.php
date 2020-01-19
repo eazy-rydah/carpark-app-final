@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use \App\AuthMethod;
 use \App\FlashMessage;
-use \App\Models\EmployeeRole;
+use \App\Models\UserRole;
 
 /**
  * Administrator base controller
@@ -38,7 +38,7 @@ abstract class AdminAuth extends Authenticated
      */ 
     protected function requireAdmin()
     {
-        if ($this->user->role_id != EmployeeRole::ROLE_ADMIN) {
+        if ($this->user->user_role_id != UserRole::ROLE_ADMIN) {
 
             FlashMessage::add('Administratorrechte erforderlich', FlashMessage::INFO);
 

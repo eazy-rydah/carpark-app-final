@@ -36,13 +36,13 @@
                     <td>{{employee.email}}</td>
                     <td>
                         {% for role in roles %}
-                            {% if employee.role_id == role.id %}
+                            {% if employee.user_role_id == role.user_role_id %}
                                 {{role.name}}
                             {% endif %}
                         {% endfor %}
                     </td>
                     <td>
-                        <a href="/employeeadministration/delete/{{ employee.id }}">Löschen</a>
+                        <a href="/employeeadministration/delete/{{ employee.user_id }}">Löschen</a>
                     </td>
                   </tr>
              

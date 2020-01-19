@@ -12,7 +12,7 @@ use \App\Models\ContractRequest;
  * 
  * PHP version 7.0
  */ 
-class RequestAdministration extends EmployeeAuth
+class RequestAdministration extends EmployeeCustomerServiceAuth
 {
  
      /**
@@ -42,7 +42,7 @@ class RequestAdministration extends EmployeeAuth
         $id = $this->route_params['id'];
         $request= ContractRequest::findByID($id);
 
-        $relatedClient = Client::findByID($request->client_id);
+        $relatedClient = Client::findByID($request->user_id);
 
         View::renderTemplate('requestadministration/details.html', [
             'client' => $relatedClient, 
@@ -62,7 +62,7 @@ class RequestAdministration extends EmployeeAuth
         $id = $this->route_params['id'];
         $request = ContractRequest::findByID($id);
         
-        $relatedClient = Client::findByID($request->client_id);
+        $relatedClient = Client::findByID($request->user_id);
         $relatedClient->sendRequestDenyEmail($request);
 
         $request->delete();

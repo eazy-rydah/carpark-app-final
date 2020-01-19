@@ -6,13 +6,13 @@
 
     <h1>Parkplatz</h1>
 
-    <form method="POST" id="formParking" action="/parking/{{contract.id}}/share">
+    <form method="POST" id="formParking" action="/parking/{{contract.contract_id}}/share">
         
         <hr>
 
         {% for carpark in carparks %}
     
-            {% if contract.carpark_id == carpark.id %}
+            {% if contract.carpark_id == carpark.carpark_id %}
             <dl class="row mt-3">
                 <dt class="col-sm-3">Parkhaus</dt>
                 <dd class="col-sm-9">{{ carpark.name }}</dd>
@@ -24,7 +24,7 @@
                 <dt class="col-sm-3">RFID-Schlüsselnummer</dt>
                 <dd class="col-sm-9">{{ contract.rfid_id }}</dd>
                 <dt class="col-sm-3">Vertragsnummer</dt>
-                <dd class="col-sm-9">{{ contract.id }}</dd>
+                <dd class="col-sm-9">{{ contract.contract_id }}</dd>
                 <dt class="col-sm-3">Gutschrift pro Freigabetag</dt>
                 <dd class="col-sm-9">{{ contract.credit_item_per_day |number_format(2, ',', ',')}} €</dd>
                 <dt class="col-sm-3">Gutschrift gesamt</dt>

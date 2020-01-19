@@ -6,7 +6,7 @@
 
     <h1>Vertrag</h1>
 
-    <form method="POST" id="formContract" action="/contractadministration/confirm-deletion/{{contract.id}}">
+    <form method="POST" id="formContract" action="/contractadministration/confirm-deletion/{{contract.contract_id}}">
 
         <div class="form-group">
             <label for="inputFirstName">Vorname</label>
@@ -39,13 +39,13 @@
 
         {% for carpark in carparks %}
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="carpark_id" id="{{carpark.id}}" value="{{carpark.id}}" 
+            <input class="form-check-input" type="radio" name="carpark_id" id="{{carpark.carpark_id}}" value="{{carpark.carpark_id}}" 
                 
-                {% if contract.carpark_id == carpark.id %}
+                {% if contract.carpark_id == carpark.carpark_id %}
                     checked
                 {% endif %}
             disabled>
-            <label class="form-check-label" for="{{carpark.id}}">
+            <label class="form-check-label" for="{{carpark.carpark_id}}">
                 {{carpark.name}}
             </label>
         </div>

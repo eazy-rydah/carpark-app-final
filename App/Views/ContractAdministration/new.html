@@ -34,7 +34,7 @@
 
         <div class="form-group">
             <label for="inputContractId">Vertragsnummer</label>
-            <input type="number" id="inputContractId" name="contract_id" placeholder="Vertragsnummer" value="{{contract.id}}" class="form-control">
+            <input type="number" id="inputContractId" name="contract_id" placeholder="Vertragsnummer" value="{{contract.contract_id}}" class="form-control">
         </div>
 
         <div class="form-group">
@@ -42,21 +42,21 @@
             <input type="number" id="inputRfidId" name="rfid_id" placeholder="RFID-Schlüsselnummer" value="{{contract.rfid_id}}" class="form-control">
         </div>
 
-        <input type="hidden" name="client_id" value="{{client.id}}">
-        <input type="hidden" name="request_id" value="{{contract.request_id}}">
+        <input type="hidden" name="user_id" value="{{client.user_id}}">
+        <input type="hidden" name="contract_request_id" value="{{contract.contract_request_id}}">
 
         <hr>
 
         {% for carpark in carparks %}
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="carpark_id" id="{{carpark.id}}" value="{{carpark.id}}" 
+            <input class="form-check-input" type="radio" name="carpark_id" id="{{carpark.carpark_id}}" value="{{carpark.carpark_id}}" 
                 
-                {% if contract.carpark_id == carpark.id %}
+                {% if contract.carpark_id == carpark.carpark_id %}
                     checked
                 {% endif %}
             
             >
-            <label class="form-check-label" for="{{carpark.id}}">
+            <label class="form-check-label" for="{{carpark.carpark_id}}">
                 {{carpark.name}}
             </label>
         </div>

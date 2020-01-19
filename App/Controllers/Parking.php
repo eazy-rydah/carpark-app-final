@@ -24,7 +24,7 @@ class Parking extends ClientAuth
     public function showAction()
     {
 
-       $contracts = Contract::findAllByUserID($this->user->id);
+       $contracts = Contract::findAllByUserID($this->user->user_id);
        $carparks = Carpark::getAll();
 
        View::renderTemplate('parking/all.html', [

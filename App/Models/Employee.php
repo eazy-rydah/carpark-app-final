@@ -39,42 +39,6 @@ class Employee extends User
     }
 
     /**
-     * Save the user model with the current property values
-     * 
-     * @return boolean True if the user was saved, false otherwise
-     */ 
-    public function save()
-    {
-        $this->validate();
-
-        if (empty($this->errors)) {
-
-            $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
-
-            $token = new Token();
-            $hashed_token = $token->getHash();
-            $this->activation_token = $token->getValue();
-
-            $sql = 'INSERT INTO user (first_name, last_name, email ,password_hash,          type, activation_hash, role_id)
-                    VALUES (:first_name, :last_name, :email, :password_hash, :type, :activation_hash, :role_id)';
-    
-            $db = static::getDB();
-            $stmt = $db->prepare($sql);
-    
-            $stmt->bindValue(':first_name', $this->first_name, PDO::PARAM_STR);
-            $stmt->bindValue(':last_name', $this->last_name, PDO::PARAM_STR);$stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
-            $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
-            $stmt->bindValue(':type', $this->type, PDO::PARAM_STR);
-            $stmt->bindValue(':activation_hash', $hashed_token, PDO::PARAM_STR);
-            $stmt->bindValue(':role_id', $this->role_id, PDO::PARAM_INT);
-    
-            return $stmt->execute();
-        }
-
-        return false;
-    }
-
-    /**
      * Validate the current property values, adding validation error messages
      * to the errors array property
      *  
@@ -85,8 +49,28 @@ class Employee extends User
        
         parent::validate();
 
-        if (!isset($this->role_id)) {
+        if (!isset($this->user_role_id)) {
             $this->errors[] = 'Bitte Rolle auswählen';
         }
+    }
+
+    /**
+     * Get all Users with Employee Role 
+     * 
+     * @return mixed User object if found, false otherwise
+     */  
+    public static function getAll()
+    {
+        $sql = 'SELECT * FROM user WHERE user_role_id != 4';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        // fetch object with dynamic namespace, instead of array
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        
+        $stmt->execute();
+
+        return $stmt->fetchAll(); 
     }
 }

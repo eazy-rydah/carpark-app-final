@@ -4,13 +4,14 @@ namespace App\Controllers;
 
 use \App\AuthMethod;
 use \App\FlashMessage;
+use \App\Models\UserRole;
 
 /**
- * Employee base controller
+ * EmployeeCustomerService base controller
  * 
  * PHP version 7.0
  */ 
-abstract class EmployeeAuth extends Authenticated
+abstract class EmployeeCustomerServiceAuth extends Authenticated
 {
     /**
      * Require the user to be authenticated before giving access to all methods * in the controller
@@ -37,9 +38,9 @@ abstract class EmployeeAuth extends Authenticated
      */ 
     protected function requireEmployee()
     {
-        if ($this->user->type != 'employee') {
+        if ($this->user->user_role_id != UserRole::ROLE_CUSTOMER_SERVICE) {
 
-            FlashMessage::add('Mitarbeiterrolle erforderlich', FlashMessage::INFO);
+            FlashMessage::add('Kundenservice Mitarbeiterrolle erforderlich', FlashMessage::INFO);
 
             $this->redirect('/');
         }
