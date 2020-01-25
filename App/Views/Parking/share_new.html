@@ -20,7 +20,7 @@
 
    
     
-    <form method="post" action="/parking/{{contract.id}}/calculate-share" id="formParkingCalculateShare">
+    <form method="post" action="/parking/{{contract.contract_id}}/calculate-share" id="formParkingCalculateShare">
 
         <div class="form-group">
             <label for="inputStartDate">Startdatum</label>
@@ -32,7 +32,7 @@
             <input type="text" id="inputEndDate" name="end_date" placeholder="Enddatum" value="{{ share.end_date }}" class="form-control">
         </div>
 
-        <input type="hidden" name="contract_id" value="{{contract.id}}">
+        <input type="hidden" name="contract_id" value="{{contract.contract_id}}">
 
         <div class="form-group">
             <input type="submit" value="Gutschrift berechnen" class=" btn btn-success">
@@ -46,9 +46,9 @@
  
 
 
-    <form method="post" action="/parking/{{contract.id}}/confirm-share" id="formParkingCreateShare">
+    <form method="post" action="/parking/{{contract.contract_id}}/confirm-share" id="formParkingCreateShare">
 
-        <input type="hidden" name="contract_id" value="{{contract.id}}">
+        <input type="hidden" name="contract_id" value="{{contract.contract_id}}">
         <input type="hidden" name="start_date" value="{{ share.start_date }}">
         <input type="hidden" name="end_date" value="{{ share.end_date }}">
         <input type="hidden" name="amount_days" value="{{ share.amount_days }}">
@@ -93,7 +93,7 @@
                         {% if share.is_active %}
                             Aktiv
                         {% else %}
-                            <a href="#">/parking/cancel-share/{{share.id}}</a>
+                            <a href="/parking/{{contract.contract_id}}/cancel-share/{{share.share_id}}">Stornieren</a>
                         {% endif %}
                     </td>
 

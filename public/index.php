@@ -41,5 +41,6 @@ $router->add('signup/activate/{token:[\da-f]+}', ['controller' => 'Signup', 'act
 $router->add('{controller}/{action}');
 $router->add('{controller}/{action}/{id:\d+}');
 $router->add('{controller}/{id:\d+}/{action}');
+$router->add('{controller}/{id:\d+}/{action}/{ud:\d+}');
     
 $router->dispatch($_SERVER['QUERY_STRING']);

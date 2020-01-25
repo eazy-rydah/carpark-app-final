@@ -19,10 +19,10 @@
         </ul>
     {% endif %}
 
-    <form method="post" action="/parking/{{contract.id}}/create-share" id="formParkingShareNew">
+    <form method="post" action="/parking/{{contract.contract_id}}/create-share" id="formParkingShareNew">
         {% for carpark in carparks %}
     
-        {% if contract.carpark_id == carpark.id %}
+        {% if contract.carpark_id == carpark.carpark_id %}
         <dl class="row mt-3">
             <dt class="col-sm-3">Parkhaus</dt>
             <dd class="col-sm-9">{{ carpark.name }}</dd>
@@ -34,7 +34,7 @@
             <dt class="col-sm-3">RFID-Schlüsselnummer</dt>
             <dd class="col-sm-9">{{ contract.rfid_id }}</dd>
             <dt class="col-sm-3">Vertragsnummer</dt>
-            <dd class="col-sm-9">{{ contract.id }}</dd>
+            <dd class="col-sm-9">{{ contract.contract_id }}</dd>
             <dt class="col-sm-3">Startdatum</dt>
             <dd class="col-sm-9">{{ share.start_date | date("d.m.y")}}</dd>
             <dt class="col-sm-3">Enddatum</dt>
@@ -46,7 +46,7 @@
             
         </dl>
 
-        <input type="hidden" name="contract_id" value="{{contract.id}}">
+        <input type="hidden" name="contract_id" value="{{contract.contract_id}}">
         <input type="hidden" name="start_date" value="{{ share.start_date }}">
         <input type="hidden" name="end_date" value="{{ share.end_date }}">
         <input type="hidden" name="amount_days" value="{{ share.amount_days }}">
@@ -64,7 +64,7 @@
                 </button>
                 </div>
                 <div class="modal-body">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto distinctio, odit sunt voluptatem accusamus nostrum eaque rem quisquam illo, harum nulla ad dolor delectus! Enim dicta reiciendis dolores eius quas!</p>
+                    <p>Bitte beachten Sie, dass eine Stornierung Ihrer Freigabe bis maximal 48 Stunden vor dem festgelegten Startdatum möglich ist.</p>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto distinctio, odit sunt voluptatem accusamus nostrum eaque rem quisquam illo, harum nulla ad dolor delectus! Enim dicta reiciendis dolores eius quas!</p>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto distinctio, odit sunt voluptatem accusamus nostrum eaque rem quisquam illo, harum nulla ad dolor delectus! Enim dicta reiciendis dolores eius quas!</p>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto distinctio, odit sunt voluptatem accusamus nostrum eaque rem quisquam illo, harum nulla ad dolor delectus! Enim dicta reiciendis dolores eius quas!</p>
@@ -92,7 +92,7 @@
             <input type="submit" value="Freigabe erstellen" class=" btn btn-success">
         </div>
         
-        <a href="/parking/{{contract.id}}/share">Zurück</a>
+        <a href="/parking/{{contract.contract_id}}/share">Zurück</a>
 
     </form>
 
@@ -123,7 +123,7 @@
                         {% if share.is_active %}
                             Aktiv
                         {% else %}
-                            <a href="#">/parking/cancel-share/{{share.id}}</a>
+                            <a href="#">/parking/cancel-share/{{share.share_id}}</a>
                         {% endif %}
                     </td>
 

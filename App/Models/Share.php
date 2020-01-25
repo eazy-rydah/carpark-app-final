@@ -38,6 +38,13 @@ class Share extends \Core\Model
     const MIN_END_DATE = '+7 days';
 
     /**
+     * Earliest cancel date from today
+     * 
+     * @var string
+     */
+    const MIN_CANCEL_DATE = '+3 days';
+
+    /**
      * Class constructor
      * 
      * @param array $data Initial property values
@@ -115,8 +122,12 @@ class Share extends \Core\Model
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue(':start_date', $this->start_date, PDO::PARAM_STR);
-            $stmt->bindValue(':end_date', $this->end_date, PDO::PARAM_STR);
+            $stmt->bindValue(':start_date', 
+                            substr($this->start_date, 0, strpos($this->start_date, 'T')),
+                            PDO::PARAM_STR);
+            $stmt->bindValue(':end_date',
+                            substr($this->end_date, 0, strpos($this->end_date, 'T')), 
+                            PDO::PARAM_STR);
             $stmt->bindValue(':contract_id', $this->contract_id, PDO::PARAM_INT);
     
             return $stmt->execute();
@@ -384,7 +395,7 @@ class Share extends \Core\Model
         return $dates;
     }
 
-      /**
+    /**
      * Format current share dates into ISO8601 date strings
      * 
      * @return void
@@ -441,7 +452,7 @@ class Share extends \Core\Model
             $needle = $element->start_date;
 
             if (in_array($needle, $haystack)) {
-                $includesdShareIDs[] = $element->id;
+                $includesdShareIDs[] = $element->share_id;
             }
         }
 
@@ -457,7 +468,7 @@ class Share extends \Core\Model
      */
     protected function removeByIDs($ids) {
 
-        $sql = 'DELETE FROM share WHERE id IN (';
+        $sql = 'DELETE FROM share WHERE share_id IN (';
 
         $values = [];
 
@@ -520,22 +531,112 @@ class Share extends \Core\Model
     }
 
     /**
-    * Remove single share by ID
+    * Remove share if not active
     * 
     * @return boolean true if removing successfull, false otherwise
     *
     */
     public function remove() {
 
-        $sql = 'DELETE FROM share WHERE id = :id';
+        if(Share::earliestCancelDateIsValid($this->start_date)) {
+
+            $sql = 'DELETE FROM share WHERE share_id = :id';
+
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+    
+            $stmt->bindParam(':id', $this->share_id, PDO::PARAM_INT);
+    
+            return $stmt->execute(); 
+
+        } else {
+
+            return false;
+
+        }
+    }
+
+    /**
+     * Check if cancel date is enough days in front of today
+     * 
+     * @param string $start_date The start date 
+     * 
+     * @return boolean True if cancel start date is valid, false otherwise
+    */
+    protected static function earliestCancelDateIsValid($start_date) {
+
+        $start_date = new DateTime($start_date);
+        $min_start_date = new DateTime('now');
+        $min_start_date->setTime(0,0,0);
+        $min_start_date->modify(Share::MIN_CANCEL_DATE);
+
+        if ($start_date < $min_start_date) {
+            return false;
+        } 
+
+        return true;
+    }
+
+    /**
+    * Find share by id
+    * 
+    * @param string $id The share ID
+    * 
+    * @return Share Share object if found, false otherwise
+    */
+    public static function getByID($id) {
+
+        $sql = 'SELECT * FROM share WHERE share_id = :id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
-        $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
-        return $stmt->execute(); 
+        $stmt->execute();
 
+        return $stmt->fetch();  
+    }
+
+    /**
+    * Check all given shares for active status
+    * 
+    * @param mixed $shares The share object collection
+    * 
+    * @return void
+    */
+    public static function checkActiveStatus($shares) {
+
+        foreach ($shares as $share) {
+            
+            if (! Share::earliestCancelDateIsValid($share->start_date)) {
+
+                Share::activate($share->share_id);
+            }
+        }
+    }
+
+     /**
+     * Activate share account with the specified id
+     * 
+     * @param string $id The share id
+     * 
+     * @return void
+     * */
+    private static function activate($id)
+    {
+
+        $sql = 'UPDATE share
+                SET is_active = 1
+                WHERE share_id = :id';
+        
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':id', $id, PDO::PARAM_STR);
+
+        $stmt->execute();
     }
 }
     
