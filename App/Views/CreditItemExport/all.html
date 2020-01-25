@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Gutschriftverwaltung{% endblock %}
+
+{% block body %}
+
+    <h1 class="mb-5">Gutschriftverwaltung</h1>
+
+    {% if credit_items %}
+
+    <table class="table table-striped">
+
+        <thead>
+            <tr>
+            <th scope="col">Vertragsnummer</th>
+            <th scope="col">Gutschrift</th>
+            <th scope="col">Erstelldatum</th>
+            <th scope="col">Export-Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for item in credit_items %}
+
+              <tr>
+            
+                {% for share in shares %}
+                    {% if share.share_id == item.share_id %}
+                    <td>
+                        {{share.contract_id}}
+                    </td>
+                    <td>
+                        {{share.credit_item}} €
+                    </td>
+                    <td>
+                        {{item.created_at| date("d.m.Y")}}
+                    </td>
+                    {% endif %}
+                {% endfor %}
+                <td>
+                    {% if item.csv_report_id %}
+                        exportiert
+                    {% else %}
+                        ausstehend
+                    {% endif %}
+                </td>
+               
+            </tr>
+         
+        {% endfor %}
+    
+    </tbody>
+
+    </table>
+
+    <form action="/credititemexport/download" method="POST">
+    
+        <button type="submit" class="btn btn-success"> Gutschriften exportieren</button>
+
+    </form>
+
+    {% else %}
+
+        <p>Keine Gutschriften zum Export verfügbar</p>
+
+    {% endif %}
+
+{% endblock %}

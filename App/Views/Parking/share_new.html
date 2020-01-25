@@ -24,12 +24,12 @@
 
         <div class="form-group">
             <label for="inputStartDate">Startdatum</label>
-            <input type="text" id="inputStartDate" name="start_date"  placeholder="Startdatum" value="{{ share.start_date }}" class="form-control">
+            <input type="date" id="inputStartDate" name="start_date"  placeholder="Startdatum" value="{{ share.start_date }}" class="form-control">
         </div>
 
         <div class="form-group">
             <label for="inputEndDate">Enddatum</label>
-            <input type="text" id="inputEndDate" name="end_date" placeholder="Enddatum" value="{{ share.end_date }}" class="form-control">
+            <input type="date" id="inputEndDate" name="end_date" placeholder="Enddatum" value="{{ share.end_date }}" class="form-control">
         </div>
 
         <input type="hidden" name="contract_id" value="{{contract.contract_id}}">
@@ -88,7 +88,7 @@
                   <tr>
                     <td>{{share.start_date}}</td>
                     <td>{{share.end_date}}</td>
-                    <td>Betrag X in €</td>
+                    <td>{{share.credit_item}} €</td>
                     <td>
                         {% if share.is_active %}
                             Aktiv

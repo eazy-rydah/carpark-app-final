@@ -114,9 +114,11 @@ class Share extends \Core\Model
            
             $sql = 'INSERT INTO share ( start_date, 
                                         end_date,
+                                        credit_item,
                                         contract_id) 
                                 VALUES (:start_date,
                                         :end_date,
+                                        :credit_item,
                                         :contract_id)';
             
             $db = static::getDB();
@@ -128,6 +130,7 @@ class Share extends \Core\Model
             $stmt->bindValue(':end_date',
                             substr($this->end_date, 0, strpos($this->end_date, 'T')), 
                             PDO::PARAM_STR);
+            $stmt->bindValue(':credit_item', $this->credit_item, PDO::PARAM_STR);
             $stmt->bindValue(':contract_id', $this->contract_id, PDO::PARAM_INT);
     
             return $stmt->execute();
@@ -637,6 +640,44 @@ class Share extends \Core\Model
         $stmt->bindValue(':id', $id, PDO::PARAM_STR);
 
         $stmt->execute();
+    }
+
+    /**
+    * Get all shares
+    * 
+    * @return mixed Share object collection if found, false otherwise
+    */
+    public static function getAll() {
+
+        $sql = 'SELECT * FROM share';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();  
+    }
+
+     /**
+    * Get all shares
+    * 
+    * @return mixed Share object collection if found, false otherwise
+    */
+    public static function getActiveShares() {
+
+        $sql = 'SELECT * FROM share WHERE is_active = 1';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();  
     }
 }
     

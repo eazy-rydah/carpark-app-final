@@ -5,6 +5,9 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 -- Schema carparkapp
 -- -----------------------------------------------------
 DROP SCHEMA IF EXISTS `carparkapp` ;
@@ -18,8 +21,6 @@ USE `carparkapp` ;
 -- -----------------------------------------------------
 -- Table `carparkapp`.`carpark`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `carparkapp`.`carpark` ;
-
 CREATE TABLE IF NOT EXISTS `carparkapp`.`carpark` (
   `carpark_id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
@@ -29,29 +30,25 @@ CREATE TABLE IF NOT EXISTS `carparkapp`.`carpark` (
   `place` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`carpark_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
 -- Table `carparkapp`.`user_role`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `carparkapp`.`user_role` ;
-
 CREATE TABLE IF NOT EXISTS `carparkapp`.`user_role` (
   `user_role_id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`user_role_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 7
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
 -- Table `carparkapp`.`user`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `carparkapp`.`user` ;
-
 CREATE TABLE IF NOT EXISTS `carparkapp`.`user` (
   `user_id` INT NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(45) NOT NULL,
@@ -66,23 +63,22 @@ CREATE TABLE IF NOT EXISTS `carparkapp`.`user` (
   PRIMARY KEY (`user_id`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
   UNIQUE INDEX `id_UNIQUE` (`user_id` ASC) VISIBLE,
-  UNIQUE INDEX `activation_hash_UNIQUE` (`activation_hash` ASC) VISIBLE,
   UNIQUE INDEX `password_reset_hash_UNIQUE` (`password_reset_hash` ASC) VISIBLE,
+  UNIQUE INDEX `activation_hash_UNIQUE` (`activation_hash` ASC) VISIBLE,
   INDEX `fk_user_user_role1_idx` (`user_role_id` ASC) VISIBLE,
   CONSTRAINT `fk_user_user_role1`
     FOREIGN KEY (`user_role_id`)
     REFERENCES `carparkapp`.`user_role` (`user_role_id`)
+    ON DELETE RESTRICT
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 15
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
 -- Table `carparkapp`.`contract`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `carparkapp`.`contract` ;
-
 CREATE TABLE IF NOT EXISTS `carparkapp`.`contract` (
   `contract_id` INT NOT NULL,
   `rfid_id` INT NOT NULL,
@@ -112,8 +108,6 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `carparkapp`.`contract_request`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `carparkapp`.`contract_request` ;
-
 CREATE TABLE IF NOT EXISTS `carparkapp`.`contract_request` (
   `contract_request_id` INT NOT NULL AUTO_INCREMENT,
   `contract_auth` INT NOT NULL,
@@ -125,6 +119,7 @@ CREATE TABLE IF NOT EXISTS `carparkapp`.`contract_request` (
   UNIQUE INDEX `id_UNIQUE` (`contract_request_id` ASC) VISIBLE,
   INDEX `fk_contract_request_user1_idx` (`user_id` ASC) VISIBLE,
   INDEX `fk_contract_request_contract1_idx` (`contract_id` ASC) VISIBLE,
+  UNIQUE INDEX `contract_id_UNIQUE` (`contract_id` ASC) VISIBLE,
   CONSTRAINT `fk_contract_request_contract1`
     FOREIGN KEY (`contract_id`)
     REFERENCES `carparkapp`.`contract` (`contract_id`)
@@ -136,15 +131,13 @@ CREATE TABLE IF NOT EXISTS `carparkapp`.`contract_request` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 14
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
 -- Table `carparkapp`.`csv_report`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `carparkapp`.`csv_report` ;
-
 CREATE TABLE IF NOT EXISTS `carparkapp`.`csv_report` (
   `csv_report_id` INT NOT NULL AUTO_INCREMENT,
   `amount_credit_items` INT NOT NULL,
@@ -158,12 +151,11 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `carparkapp`.`share`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `carparkapp`.`share` ;
-
 CREATE TABLE IF NOT EXISTS `carparkapp`.`share` (
   `share_id` INT NOT NULL AUTO_INCREMENT,
   `start_date` DATE NOT NULL,
   `end_date` DATE NOT NULL,
+  `credit_item` FLOAT NOT NULL,
   `is_active` TINYINT NULL DEFAULT NULL,
   `contract_id` INT NOT NULL,
   PRIMARY KEY (`share_id`),
@@ -172,28 +164,27 @@ CREATE TABLE IF NOT EXISTS `carparkapp`.`share` (
   CONSTRAINT `fk_share_contract1`
     FOREIGN KEY (`contract_id`)
     REFERENCES `carparkapp`.`contract` (`contract_id`)
-    ON DELETE RESTRICT
+    ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
 -- Table `carparkapp`.`credit_item`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `carparkapp`.`credit_item` ;
-
 CREATE TABLE IF NOT EXISTS `carparkapp`.`credit_item` (
   `credit_item_id` INT NOT NULL AUTO_INCREMENT,
-  `amount` FLOAT NOT NULL,
   `share_id` INT NOT NULL,
-  `csv_report_csv_report_id` INT NULL DEFAULT NULL,
+  `csv_report_id` INT NULL DEFAULT NULL,
   PRIMARY KEY (`credit_item_id`),
   UNIQUE INDEX `id_UNIQUE` (`credit_item_id` ASC) VISIBLE,
   INDEX `fk_credit_item_share1_idx` (`share_id` ASC) VISIBLE,
-  INDEX `fk_credit_item_csv_report1_idx` (`csv_report_csv_report_id` ASC) VISIBLE,
+  INDEX `fk_credit_item_csv_report1_idx` (`csv_report_id` ASC) VISIBLE,
+  UNIQUE INDEX `share_id_UNIQUE` (`share_id` ASC) VISIBLE,
   CONSTRAINT `fk_credit_item_csv_report1`
-    FOREIGN KEY (`csv_report_csv_report_id`)
+    FOREIGN KEY (`csv_report_id`)
     REFERENCES `carparkapp`.`csv_report` (`csv_report_id`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE,
@@ -203,14 +194,13 @@ CREATE TABLE IF NOT EXISTS `carparkapp`.`credit_item` (
     ON DELETE RESTRICT
     ON UPDATE CASCADE)
 ENGINE = InnoDB
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
 -- Table `carparkapp`.`rfid_blockage`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `carparkapp`.`rfid_blockage` ;
-
 CREATE TABLE IF NOT EXISTS `carparkapp`.`rfid_blockage` (
   `rfid_blockage_id` INT NOT NULL AUTO_INCREMENT,
   `is_confirmed` TINYINT NULL DEFAULT '0',
@@ -218,6 +208,7 @@ CREATE TABLE IF NOT EXISTS `carparkapp`.`rfid_blockage` (
   PRIMARY KEY (`rfid_blockage_id`),
   UNIQUE INDEX `id_UNIQUE` (`rfid_blockage_id` ASC) VISIBLE,
   INDEX `fk_rfid_blockage_share1_idx` (`share_id` ASC) VISIBLE,
+  UNIQUE INDEX `share_id_UNIQUE` (`share_id` ASC) VISIBLE,
   CONSTRAINT `fk_rfid_blockage_share1`
     FOREIGN KEY (`share_id`)
     REFERENCES `carparkapp`.`share` (`share_id`)
