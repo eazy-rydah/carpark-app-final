@@ -7,6 +7,7 @@ use \App\AuthMethod;
 use \App\FlashMessage;
 use \App\Models\Share;
 use \App\Models\CreditItem;
+use \App\Models\CSVReport;
 use SplTempFileObject;
 
 /**
@@ -47,13 +48,65 @@ class CreditItemExport extends EmployeeCustomerServiceAuth
 
     public function downloadAction() {
    
+        // Get all credit items
+     
+        // put em into array or maybe export them directly
+        // if export was sucessfull -> put csv report IDs into credit items to mark them as exported
+
+        $creditItems = CreditItem::getAll();
+        $creditItemArray = get_object_vars($creditItems[0]);
+        $creditItemProperties = array_keys($creditItemArray);
+
+        $activeShares = Share::getActiveShares();
+        $activeSharesArray = get_object_vars($activeShares[0]);
+        $activeSharesProperties = array_keys($activeSharesArray);
+
+        // CSV headline from object properties
         $array = [
-            ['Row1', 'Row2', 'Row3'],
-            ['Col1', 'Col2', 'Col3'],
-            ['Col1', 'Col2', 'Col3'],
+
+            [$activeSharesProperties[6], $activeSharesProperties[4], $creditItemProperties[2]]
 
         ];
 
+   
+        $exportData = CreditItem::getAllForExport();
+
+        if ($exportData) {
+            
+            // get exportDatacount 
+            // 
+           
+            // create new csvreport
+            $csvReport = new CSVReport($exportData);
+
+            // save new csv report in database
+            $csvReport->save();
+
+            // get new csv report id
+            $id = $csvReport->csv_report_id;
+
+            //update all exported credit items with csv report id
+           
+            // TOOODOOOO
+    
+        
+
+   
+        }
+
+       // var_dump($csvReport->csv_report_id);
+      
+        // insert the id into exportedCreditItems
+
+        // convert exportdata intro array
+        foreach ($exportData as $data)  {
+
+            $data = (array) $data;
+            $array[] = $data;
+        }
+
+
+        // Create downloadable csv-file
         $file = new SplTempFileObject();
 
         foreach ($array as $row) {
@@ -65,24 +118,6 @@ class CreditItemExport extends EmployeeCustomerServiceAuth
         header("Content-Type: text/csv");
         header('Content-Disposition: attachment; filename="temp.csv"');
  
-    $file->fpassthru();
-
- /*    $handle = fopen('php://output', 'w');
-    ob_clean(); // clean slate
-
-    // [given some database query object $result]...
-
-    while ($row = db_fetch_array($result)) {
-        // parse the data...
-        
-        fputcsv($handle, $row);   // direct to buffered output
+        $file->fpassthru();
     }
-
-    ob_flush(); // dump buffer
-    fclose($handle);
-    die();		
-    // client should see download prompt and page remains where it was */
-    }
-
-
 }

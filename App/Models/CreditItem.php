@@ -63,6 +63,31 @@ class CreditItem extends \Core\Model
 
         return $stmt->fetchAll();  
     }
+
+    /**
+    * Get all credit Items Which are not exported yet
+    * 
+    * @return mixed CreditItemExport object collection if found, false otherwise
+    */
+    public static function getAllForExport() {
+
+        $sql = 'SELECT 
+                        contract_id, 
+                        credit_item,
+                        credit_item.created_at
+                FROM share    
+                JOIN credit_item 
+                ON credit_item.share_id = share.share_id 
+                WHERE credit_item.csv_report_id IS NULL;';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        $stmt->execute();
+
+        return $stmt->fetchAll();  
+    }
 }
 
 
