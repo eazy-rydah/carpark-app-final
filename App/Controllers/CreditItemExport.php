@@ -6,6 +6,7 @@ use \Core\View;
 use \App\AuthMethod;
 use \App\FlashMessage;
 use \App\Models\Share;
+use \App\Models\Contract;
 use \App\Models\CreditItem;
 use \App\Models\CSVReport;
 use SplTempFileObject;
@@ -17,6 +18,7 @@ use SplTempFileObject;
  */ 
 class CreditItemExport extends EmployeeCustomerServiceAuth
 {
+ 
     /**
      * Show the contract request page
      * 
@@ -24,100 +26,124 @@ class CreditItemExport extends EmployeeCustomerServiceAuth
      */
     public function showAction()
     {
-        // get all shares
         $shares = Share::getAll();
-        // activate all active share
         Share::checkActiveStatus($shares);
-        // scan all shares for active status
         $activeShares = Share::getActiveShares();
 
+        if ($activeShares) {
 
-        // create credit items from active shares
-        // CreditItem::createFromShares($activeShares);
-
-        // get all credit items
+            $sharesToCreateCreditItemFrom = Share::getAllWithoutCreditItem($activeShares);
+        
+            if ($sharesToCreateCreditItemFrom) {
+                CreditItem::createFromShares($sharesToCreateCreditItemFrom);
+            }
+        }
 
         $credititems = CreditItem::getAll();
 
         View::renderTemplate('credititemexport/all.html', [
-
             'credit_items' => $credititems,
             'shares' => $activeShares
         ]);
     }
 
+    /**
+     * Start csv export file download
+     *
+     * @return void
+     */
     public function downloadAction() {
    
-        // Get all credit items
+        $exportData = $this->getExportData();
      
-        // put em into array or maybe export them directly
-        // if export was sucessfull -> put csv report IDs into credit items to mark them as exported
-
-        $creditItems = CreditItem::getAll();
-        $creditItemArray = get_object_vars($creditItems[0]);
-        $creditItemProperties = array_keys($creditItemArray);
-
-        $activeShares = Share::getActiveShares();
-        $activeSharesArray = get_object_vars($activeShares[0]);
-        $activeSharesProperties = array_keys($activeSharesArray);
-
-        // CSV headline from object properties
-        $array = [
-
-            [$activeSharesProperties[6], $activeSharesProperties[4], $creditItemProperties[2]]
-
-        ];
-
-   
-        $exportData = CreditItem::getAllForExport();
-
         if ($exportData) {
             
-            // get exportDatacount 
-            // 
-           
-            // create new csvreport
             $csvReport = new CSVReport($exportData);
-
-            // save new csv report in database
             $csvReport->save();
 
-            // get new csv report id
             $id = $csvReport->csv_report_id;
+            $creditItems = CreditItem::getAllForExport();
 
-            //update all exported credit items with csv report id
-           
-            // TOOODOOOO
-    
-        
+            foreach ($creditItems as $creditItem)  {
+                
+                $creditItem->updateWithCSVReportID($id);
 
+                $relatedContract = Contract::findByID($creditItem->contract_id);
+                $relatedContract->addCreditItemSum($creditItem->credit_item);
+            }
+
+            $headline = $this->createHeadlineForCSVFile($exportData);
+            $this->exportCSV($headline, $exportData);
    
+        } else {
+
+            FlashMessage::add('Keine neuen Gutschriften zum Export verfügbar', FlashMessage::INFO);
+
+            $this->redirect('/creditItemExport/show');
         }
+    }
 
-       // var_dump($csvReport->csv_report_id);
-      
-        // insert the id into exportedCreditItems
+    /**
+     * get all data for creditItem export
+     *
+     * @return mixed $exportData object collection 
+     */
+    private function getExportData() {
 
-        // convert exportdata intro array
+        $creditItems = CreditItem::getAll();
+        $activeShares = Share::getActiveShares();
+
+        $exportData = CreditItem::getAllForExport();
+        
+        return $exportData;
+    }
+
+    /**
+     * Create headerline for downloadable csv file
+     *
+     * @param  mixed $exportData object collection
+     *
+     * @return array $headline The Headline for downloadable csv file
+     */
+    private function createHeadlineForCSVFile($exportData) {
+
+        $exportDataArray = get_object_vars($exportData[0]);
+        $exportDataProperties = array_keys($exportDataArray);
+
+        // CSV headline from object properties
+        $headline = [
+            [$exportDataProperties[0], $exportDataProperties[1], $exportDataProperties[2]]
+        ];
+
+        return $headline;
+    }
+    
+    /**
+     * Create downloadable csv export file from exportdata
+     *
+     * @param  mixed $exportData
+     *
+     * @return void
+     */
+    private function exportCSV($headline, $exportData) {
+
         foreach ($exportData as $data)  {
 
             $data = (array) $data;
-            $array[] = $data;
+            $headline[] = $data;
         }
 
-
-        // Create downloadable csv-file
         $file = new SplTempFileObject();
 
-        foreach ($array as $row) {
+        foreach ($headline as $row) {
             $file->fputcsv($row);
         }
 
         $file->rewind();
-     
+        
         header("Content-Type: text/csv");
         header('Content-Disposition: attachment; filename="temp.csv"');
- 
+    
         $file->fpassthru();
     }
 }

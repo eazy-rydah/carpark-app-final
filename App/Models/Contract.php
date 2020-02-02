@@ -355,6 +355,31 @@ class Contract extends ContractRequest
 
         return $stmt->fetchAll(); 
     }
+
+    /**
+     * Add the credit item sum
+     * 
+     * @param float $amount The credit item sum to add
+     * 
+     * @return boolean True if the data was updated, false otherwise
+    */  
+    public function addCreditItemSum($amount)
+    {
+        $currentAmount = $this->credit_item_sum;
+        $newAmount = $currentAmount + $amount;
+
+        $sql = 'UPDATE contract
+                SET credit_item_sum = :credit_item_sum
+                WHERE contract_id = :contract_id';
+     
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':credit_item_sum', $newAmount, PDO::PARAM_STR);
+        $stmt->bindValue(':contract_id', $this->contract_id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
 }
 
 

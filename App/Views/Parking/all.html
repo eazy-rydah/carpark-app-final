@@ -14,6 +14,7 @@
                 <tr>
                 <th scope="col">Parkhaus</th>
                 <th scope="col">Adresse</th>
+                <th scope="col">Bisherige Gutschrift</th>
                 <th scope="col">Status</th>
                 <th scope="col">Optionen</th>
                 </tr>
@@ -37,6 +38,12 @@
                                 {{carpark.street}}  {{carpark.street_number}}, {{carpark.zip_code}} {{carpark.place}}
                             {% endif %}
                         {% endfor %}
+                    </td>
+                    <td>{% if contract.credit_item_sum%}
+                            {{contract.credit_item_sum}} €
+                        {% else %}
+                            0 €    
+                        {% endif %}
                     </td>
                     <td>{% if contract.is_blocked == 1 %}
                         Blockiert

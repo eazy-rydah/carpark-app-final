@@ -20,6 +20,10 @@ class CreditItem extends \Core\Model
      */ 
     public static function createFromShares($shares) 
     {
+
+        // seperate all shares, where not credit item is related to.
+        // create credit item for each share, where share.share.id != credit_item.share_id
+
         $sql = 'INSERT INTO credit_item (share_id) VALUES ';
 
         $values = [];
@@ -29,15 +33,8 @@ class CreditItem extends \Core\Model
         }
 
         $sql .= implode(" ", $values);
-
-        // Removelast character from statement if it is ","
         $sql = rtrim($sql, ",");
-
-        // Add closing bracket to complete sql statement
-        //$sql .= "";
-
-        //var_dump($sql); exit;
-
+        
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
@@ -72,8 +69,9 @@ class CreditItem extends \Core\Model
     public static function getAllForExport() {
 
         $sql = 'SELECT 
-                        contract_id, 
-                        credit_item,
+                        contract_id,
+                        credit_item, 
+                        credit_item.credit_item_id,
                         credit_item.created_at
                 FROM share    
                 JOIN credit_item 
@@ -88,6 +86,29 @@ class CreditItem extends \Core\Model
 
         return $stmt->fetchAll();  
     }
+
+    /**
+     * Update credit item csv_report_id field with given id
+     *
+     * @param integer $id The csv_report_id to update
+     * 
+     * @return void
+     */
+    public function updateWithCSVReportID($id) 
+    {
+       
+        $sql = 'UPDATE credit_item 
+                SET csv_report_id =' . $id . 
+                ' WHERE credit_item_id = ' . $this->credit_item_id ;
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        return $stmt->execute(); 
+
+    }
+
+   
 }
 
 

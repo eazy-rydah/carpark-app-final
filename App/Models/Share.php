@@ -679,5 +679,48 @@ class Share extends \Core\Model
 
         return $stmt->fetchAll();  
     }
+
+    /**
+    * Get all shares without credit item
+    * 
+    * @param mixed $shares The shares to check related credit item for
+    *
+    * @return mixed Share object collection if found, false otherwise
+    */
+    public static function getAllWithoutCreditItem($data) {
+
+        $shares = [];
+
+        foreach ($data as $share) {
+            
+            if (! $share->hasCreditItem()) {
+                $shares[] = $share;
+            } 
+        }
+
+        return $shares;
+    }
+
+    /**
+     * Check if share has related credit item in database
+     *
+     * @return boolean, true if related credit item is found, false otherwise
+     */
+    private function hasCreditItem() {
+        
+        $sql = 'SELECT *
+        FROM share    
+        JOIN credit_item 
+        ON credit_item.share_id = :id 
+        WHERE credit_item.share_id = :id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindParam(':id', $this->share_id, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetch();  
+    }
 }
     
