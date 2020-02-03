@@ -19,7 +19,7 @@
         </ul>
     {% endif %}
 
-    <form method="post" action="/parking/{{contract.contract_id}}/create-share" id="formParkingShareNew">
+    <form method="post" action="/Parking/{{contract.contract_id}}/create-share" id="formParkingShareNew">
         {% for carpark in carparks %}
     
         {% if contract.carpark_id == carpark.carpark_id %}
@@ -92,7 +92,7 @@
             <input type="submit" value="Freigabe erstellen" class=" btn btn-success">
         </div>
         
-        <a href="/parking/{{contract.contract_id}}/share">Zurück</a>
+        <a href="/Parking/{{contract.contract_id}}/share">Zurück</a>
 
     </form>
 
@@ -123,7 +123,7 @@
                         {% if share.is_active %}
                             Aktiv
                         {% else %}
-                            <a href="#">/parking/cancel-share/{{share.share_id}}</a>
+                            <a href="/Parking/cancel-share/{{share.share_id}}">Stornieren</a>
                         {% endif %}
                     </td>
 

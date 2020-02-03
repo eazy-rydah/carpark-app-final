@@ -21,7 +21,7 @@ class Login extends \Core\Controller
      */
     public function showAction()
     {
-        View::renderTemplate('Login/show.html');
+        View::renderTemplate('login/show.html');
     }
 
     /**
@@ -45,7 +45,7 @@ class Login extends \Core\Controller
 
             FlashMessage::add('Anmeldung fehlgeschlagen', FlashMessage::WARNING);
 
-            View::renderTemplate('Login/show.html', [
+            View::renderTemplate('login/show.html', [
                 'email' => $_POST['email']
             ]);
         }
@@ -60,7 +60,7 @@ class Login extends \Core\Controller
     {
         AuthMethod::logout();
 
-        $this->redirect('/login/show-logout-message');
+        $this->redirect('/Login/show-logout-message');
     }
 
     /**

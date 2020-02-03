@@ -20,7 +20,7 @@
 
    
     
-    <form method="post" action="/parking/{{contract.contract_id}}/calculate-share" id="formParkingCalculateShare">
+    <form method="post" action="/Parking/{{contract.contract_id}}/calculate-share" id="formParkingCalculateShare">
 
         <div class="form-group">
             <label for="inputStartDate">Startdatum</label>
@@ -46,7 +46,7 @@
  
 
 
-    <form method="post" action="/parking/{{contract.contract_id}}/confirm-share" id="formParkingCreateShare">
+    <form method="post" action="/Parking/{{contract.contract_id}}/confirm-share" id="formParkingCreateShare">
 
         <input type="hidden" name="contract_id" value="{{contract.contract_id}}">
         <input type="hidden" name="start_date" value="{{ share.start_date }}">
@@ -61,7 +61,7 @@
     </form>
     <hr>
     {% endif%}
-    <a href="/parking/show">Zurück</a>
+    <a href="/Parking/show">Zurück</a>
    
 
 
@@ -93,7 +93,7 @@
                         {% if share.is_active %}
                             Aktiv
                         {% else %}
-                            <a href="/parking/{{contract.contract_id}}/cancel-share/{{share.share_id}}">Stornieren</a>
+                            <a href="/Parking/{{contract.contract_id}}/cancel-share/{{share.share_id}}">Stornieren</a>
                         {% endif %}
                     </td>
 

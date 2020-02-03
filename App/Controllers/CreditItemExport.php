@@ -79,7 +79,7 @@ class CreditItemExport extends EmployeeCustomerServiceAuth
 
             FlashMessage::add('Keine neuen Gutschriften zum Export verfügbar', FlashMessage::INFO);
 
-            $this->redirect('/creditItemExport/show');
+            $this->redirect('/CreditItemExport/show');
         }
     }
 

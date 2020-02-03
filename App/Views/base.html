@@ -26,30 +26,30 @@
                 <ul class="navbar-nav ml-auto">
                     {% if current_user.user_role_id == 1 %}
                     <li class="nav-item">
-                    <a class="nav-link" href="/employeeadministration/show">Mitarbeiterverwaltung</a>
+                    <a class="nav-link" href="/EmployeeAdministration/show">Mitarbeiterverwaltung</a>
                     </li>
                     {% endif %}
                     {% if current_user.user_role_id == 2  %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/requestadministration/show">Anfragenverwaltung</a>
+                        <a class="nav-link" href="/RequestAdministration/show">Anfragenverwaltung</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/contractadministration/show">Vertragsverwaltung</a>
+                        <a class="nav-link" href="/ContractAdministration/show">Vertragsverwaltung</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/credititemexport/show">Gutschriftexport</a>
+                        <a class="nav-link" href="/CreditItemExport/show">Gutschriftexport</a>
                     </li>
                     {% endif %}
                     {% if current_user.user_role_id == 4 %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/parking/show">Parkplätze</a>
+                        <a class="nav-link" href="/Parking/show">Parkplätze</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/parkingrequest/show">Parkplatz hinzufügen</a>
+                        <a class="nav-link" href="/ParkingRequest/show">Parkplatz hinzufügen</a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/profile/show">Profil</a>
+                        <a class="nav-link" href="/Profile/show">Profil</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">Abmelden</a>

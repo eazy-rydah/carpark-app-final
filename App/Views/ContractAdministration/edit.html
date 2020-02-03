@@ -15,7 +15,7 @@
         </ul>
     {% endif %}
 
-    <form method="POST" id="formContract" action="/contractadministration/update">
+    <form method="POST" id="formContract" action="/ContractAdministration/update">
 
         <div class="form-group">
             <label for="inputFirstName">Vorname</label>
@@ -74,14 +74,14 @@
         <div class="form-group">
 
             {% if contract.is_blocked == 1 %}
-                <a href="/contractadministration/unblock/{{contract.contract_id}}" class="btn btn-info btn-sm  ">Freigeben</a>
+                <a href="/ContractAdministration/unblock/{{contract.contract_id}}" class="btn btn-info btn-sm  ">Freigeben</a>
             {% else %}
-                <a href="/contractadministration/block/{{contract.contract_id}}" class="btn btn-warning btn-sm  ">Blockieren</a>
+                <a href="/ContractAdministration/block/{{contract.contract_id}}" class="btn btn-warning btn-sm  ">Blockieren</a>
             {% endif %}
-            <a href="/contractadministration/delete/{{contract.contract_id}}" class="btn btn-danger btn-sm  ">Löschen</a>
+            <a href="/ContractAdministration/delete/{{contract.contract_id}}" class="btn btn-danger btn-sm  ">Löschen</a>
         </div>
 
-        <a href="/contractadministration/show" class="btn btn-secondary btn-sm">Zurück</a>
+        <a href="/ContractAdministration/show" class="btn btn-secondary btn-sm">Zurück</a>
 
     </form>
 

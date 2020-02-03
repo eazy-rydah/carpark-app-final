@@ -62,7 +62,7 @@ class Profile extends Authenticated
             
             FlashMessage::add('Änderungen erfolgreich gespeichert', FlashMessage::SUCCESS);
 
-            $this->redirect('/profile/show');
+            $this->redirect('/Profile/show');
 
         } else {
 

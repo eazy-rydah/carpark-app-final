@@ -65,7 +65,7 @@ class EmployeeAdministration extends AdminAuth
 
             FlashMessage::add('Mitarbeiter erfolgreich angelegt', FlashMessage::SUCCESS);
 
-            $this->redirect('/employeeadministration/show');
+            $this->redirect('/EmployeeAdministration/show');
     
         } else {
 
@@ -101,6 +101,6 @@ class EmployeeAdministration extends AdminAuth
 
         }
 
-        $this->redirect('/employeeadministration/show');
+        $this->redirect('/EmployeeAdministration/show');
     }
 }

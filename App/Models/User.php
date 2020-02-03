@@ -266,10 +266,10 @@ class User extends \Core\Model
      */
     protected function sendPasswordResetEmail()
     {
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/password/show-reset/' . $this->password_reset_token;
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/Password/show-reset/' . $this->password_reset_token;
 
-        $text = View::getTemplate('Password/reset_email.txt', ['url' => $url]);
-        $html = View::getTemplate('Password/reset_email.html', ['url' => $url]);
+        $text = View::getTemplate('password/reset_email.txt', ['url' => $url]);
+        $html = View::getTemplate('password/reset_email.html', ['url' => $url]);
 
         Mail::send($this->email, 'Passwort Vergessen', $text, $html);
     }
@@ -358,8 +358,8 @@ class User extends \Core\Model
     {
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/signup/activate/' . $this->activation_token;
 
-        $text = View::getTemplate('Signup/activation_email.txt', ['url' => $url]);
-        $html = View::getTemplate('Signup/activation_email.html', ['url' => $url]);
+        $text = View::getTemplate('signup/activation_email.txt', ['url' => $url]);
+        $html = View::getTemplate('signup/activation_email.html', ['url' => $url]);
 
         Mail::send($this->email, 'Nutzerkonto aktivieren', $text, $html);
     }

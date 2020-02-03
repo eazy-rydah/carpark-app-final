@@ -25,7 +25,6 @@ class ParkingRequest extends ClientAuth
 
         $this->requests = ContractRequest::findAllByUserID($this->user->user_id);
 
-        // var_dump($this->requests); exit;
     }
   
     /**
@@ -54,7 +53,7 @@ class ParkingRequest extends ClientAuth
 
         if ($request->save()) {
 
-            $this->redirect('/parkingrequest/show-success');
+            $this->redirect('/ParkingRequest/show-success');
 
         } else {
 
@@ -94,11 +93,11 @@ class ParkingRequest extends ClientAuth
 
                 $request->delete();
 
-                $this->redirect('/parkingrequest/show');
+                $this->redirect('/ParkingRequest/show');
     
             } else {
     
-                $this->redirect('/parkingrequest/show');
+                $this->redirect('/ParkingRequest/show');
                 
             }
 

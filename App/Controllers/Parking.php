@@ -81,7 +81,7 @@ class Parking extends ClientAuth
 
             FlashMessage::add('Der Parkplatz kann zur Zeit nicht freigegeben werden. Bitte kontaktieren Sie den Kundenservice', FlashMessage::WARNING);
 
-            $this->redirect('/parking/show');
+            $this->redirect('/Parking/show');
         }        
     }
 
@@ -122,7 +122,7 @@ class Parking extends ClientAuth
 
             FlashMessage::add('Der Parkplatz kann zur Zeit nicht freigegeben werden. Bitte kontaktieren Sie den Kundenservice', FlashMessage::WARNING);
 
-            $this->redirect('/parking/show');
+            $this->redirect('/Parking/show');
         }        
     }
 
@@ -151,7 +151,7 @@ class Parking extends ClientAuth
 
             FlashMessage::add('Der Parkplatz kann zur Zeit nicht freigegeben werden. Bitte kontaktieren Sie den Kundenservice', FlashMessage::WARNING);
 
-            $this->redirect('/parking/show');
+            $this->redirect('/Parking/show');
         }        
     }
 
@@ -176,7 +176,7 @@ class Parking extends ClientAuth
 
                 FlashMessage::add('Der Parkplatz wurde erfolgreich freigegeben');
 
-                $this->redirect('/parking/'. $contract->contract_id .'/share');
+                $this->redirect('/Parking/'. $contract->contract_id .'/share');
 
             } else {
 
@@ -191,7 +191,7 @@ class Parking extends ClientAuth
 
             FlashMessage::add('Der Parkplatz kann zur Zeit nicht freigegeben werden. Bitte kontaktieren Sie den Kundenservice', FlashMessage::WARNING);
 
-            $this->redirect('/parking/show');
+            $this->redirect('/Parking/show');
         }        
     }
 
@@ -210,14 +210,14 @@ class Parking extends ClientAuth
 
             FlashMessage::add('Die Freigabe wurde erfolgreich storniert', FlashMessage::INFO);
 
-            $this->redirect('/parking/'. $contract_id .'/share');
+            $this->redirect('/Parking/'. $contract_id .'/share');
 
 
         } else {
 
             FlashMessage::add('Die Freigabe ist bereits aktiv und kann nichtmehr storniert werden', FlashMessage::WARNING);
 
-            $this->redirect('/parking/'. $contract_id .'/share');
+            $this->redirect('/Parking/'. $contract_id .'/share');
 
         }
     }

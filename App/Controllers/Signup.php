@@ -38,7 +38,7 @@ class Signup extends \Core\Controller
 
             $user->sendActivationEmail();
 
-            $this->redirect('/signup/show-success');
+            $this->redirect('/Signup/show-success');
     
         } else {
 
@@ -67,7 +67,7 @@ class Signup extends \Core\Controller
     {
         User::activate($this->route_params['token']);
 
-        $this->redirect('/signup/show-activated');
+        $this->redirect('/Signup/show-activated');
         
     }
 

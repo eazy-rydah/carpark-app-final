@@ -68,7 +68,7 @@ class ContractAdministration extends EmployeeCustomerServiceAuth
             $client->sendContractConfirmationEmail($contract);
           
             FlashMessage::add('Vertrag erfolgreich angelegt');
-            $this->redirect('/requestadministration/show');
+            $this->redirect('/RequestAdministration/show');
     
         } else {
 
@@ -115,7 +115,7 @@ class ContractAdministration extends EmployeeCustomerServiceAuth
           
             FlashMessage::add('Änderungen erfolgreich gespeichert', FlashMessage::SUCCESS);
 
-            $this->redirect('/contractadministration/show');
+            $this->redirect('/ContractAdministration/show');
     
         } else {
 
@@ -144,7 +144,7 @@ class ContractAdministration extends EmployeeCustomerServiceAuth
         if ($contract->block()) {
           
             FlashMessage::add('Vertrag wurde blockiert', FlashMessage::WARNING);
-            $this->redirect('/contractadministration/edit/' . $id);
+            $this->redirect('/ContractAdministration/edit/' . $id);
     
         } else {
 
@@ -172,7 +172,7 @@ class ContractAdministration extends EmployeeCustomerServiceAuth
         if ($contract->unblock()) {
           
             FlashMessage::add('Vertrag wurde entsperrt', FlashMessage::WARNING);
-            $this->redirect('/contractadministration/edit/' . $id);
+            $this->redirect('/ContractAdministration/edit/' . $id);
     
         } else {
 
@@ -222,11 +222,11 @@ class ContractAdministration extends EmployeeCustomerServiceAuth
 
             FlashMessage::add('Vertrag wurde gelöscht', FlashMessage::INFO);
 
-            $this->redirect('/contractadministration/show');
+            $this->redirect('/ContractAdministration/show');
 
         } else {
 
-            $this->redirect('/contractadministration/edit/' . $contract->contract_id);
+            $this->redirect('/ContractAdministration/edit/' . $contract->contract_id);
         }
     }  
 }

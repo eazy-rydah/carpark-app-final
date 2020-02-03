@@ -16,7 +16,7 @@
         </ul>
     {% endif %}
 
-    <form method="post" action="/parkingrequest/create" id="formParkingRequest">
+    <form method="post" action="/ParkingRequest/create" id="formParkingRequest">
 
         <div class="form-group">
             <label for="inputContractId">Vertragsnummer</label>
@@ -71,9 +71,9 @@
                     </td>
                     <td>
                         {% if request.contract_id %}
-                            <a href="/parking/show-details/{{request.contract_id}}">Zum Parkplatz</a>
+                            <a href="/Parking/show-details/{{request.contract_id}}">Zum Parkplatz</a>
                         {% else %}
-                            <a href="/parkingrequest/delete/{{request.contract_request_id}}">Zurückziehen</a>
+                            <a href="/ParkingRequest/delete/{{request.contract_request_id}}">Zurückziehen</a>
                         {% endif %}
                     </td>
                   </tr>

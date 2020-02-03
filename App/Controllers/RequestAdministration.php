@@ -68,6 +68,6 @@ class RequestAdministration extends EmployeeCustomerServiceAuth
         $request->delete();
 
         FlashMessage::add('Anfrage abgelehnt', FlashMessage::INFO);
-        $this->redirect('/requestadministration/show');
+        $this->redirect('/RequestAdministration/show');
     }
 }
