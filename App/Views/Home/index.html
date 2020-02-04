@@ -7,48 +7,10 @@
     <h1>Willkommen zur Carpark-App</h1>
 
     <hr>
-    
-    {% if current_user.type == 'client' %}
 
-    <h1>Aktive Verträge</h1>
+    {% if current_user %} 
 
-    {% if contracts %}
-
-        <table class="table table-striped">
-
-            <thead>
-                <tr>
-                <th scope="col">Vertragsnummer</th>
-                <th scope="col">RFID-Schlüssel</th>
-                <th scope="col">Parkhaus</th>
-                <th scope="col">Status</th>
-                <th scope="col">Funktion</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {% for contract in contracts %}
-    
-                  <tr>
-                    <td>45645456456</td>
-                    <td>5456456456456</td>
-                    <td>Groner Tor</td>
-                    <td>Nicht freigegeben</td>
-                    <td><a href="#">Freigeben</a></td>
-                  </tr>
-             
-                {% endfor %}
-            
-            </tbody>
-
-        </table>
-
-    {% else %}
-
-        <p>Keine Ausstehenden Anfragen</p>
-
-    {% endif %}
+    <a href="/logout">Abmelden</a>.
 
     {% else %}
 
